@@ -1,488 +1,1149 @@
 {
-  "_comment": "DEMO / MOCK DATA — NOT REAL GOVERNMENT SCHEMES. This dataset is fictional and created for demonstration purposes only. Do NOT treat these as real government schemes.",
+  "_comment": "Real Indian Government Schemes synced from live Supabase PostgreSQL database.",
   "schemes": [
     {
-      "id": "DEMO-SC-001",
-      "name": "Community Enterprise Growth Scheme",
-      "ministry": "Demo Ministry of Social Justice (Fictional)",
-      "shortDescription": "Financial assistance for SC/ST entrepreneurs in manufacturing, service, and food sectors.",
-      "description": "This DEMO scheme provides subsidized loans and mentorship support to entrepreneurs from Scheduled Caste and Scheduled Tribe communities who wish to start or grow businesses in manufacturing, service, or food sectors. The scheme aims to promote entrepreneurship and economic empowerment among marginalized communities.",
-      "targetBeneficiaries": "SC/ST entrepreneurs aged 18–60 with annual family income up to ₹5 lakh",
+      "id": "msme-innovative-08",
+      "name": "MSME Innovative Scheme (Incubation & Design)",
+      "ministry": "Ministry of MSME",
+      "shortDescription": "Financial assistance up to ₹15 Lakh per idea for incubation, proof of concept, and design enhancement.",
+      "description": "Supports innovation and technical design among MSMEs and budding entrepreneurs. Offers ₹15 Lakh per idea for incubation development and up to ₹40 Lakh for design projects.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–55 years",
       "eligibility": {
-        "categories": ["SC", "ST"],
-        "minAge": 18,
-        "maxAge": 60,
-        "maxAnnualIncome": 500000,
-        "businessTypes": ["Manufacturing", "Service", "Food"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
-        "newBusinessAllowed": true,
-        "existingBusinessAllowed": true,
-        "maxProjectCost": 1000000
-      },
-      "benefits": [
-        "Loan up to ₹10 lakh at subsidized interest rate",
-        "Margin money assistance of 25%",
-        "Skill development training",
-        "Mentorship from established entrepreneurs",
-        "3-month moratorium on EMI payments"
-      ],
-      "maximumLoanAmount": 1000000,
-      "interestRate": "5% per annum (subsidized)",
-      "repaymentTenure": "7 years including 3-month moratorium",
-      "documents": [
-        "Aadhaar Card",
-        "Caste Certificate (SC/ST)",
-        "Income Certificate",
-        "Business Plan / Project Report",
-        "Bank Account Details",
-        "Address Proof",
-        "2 Passport-size Photographs"
-      ],
-      "applicationProcess": [
-        "Visit the nearest District Industries Centre (DIC)",
-        "Fill out the application form with required documents",
-        "Submit the business plan / project report",
-        "Application is reviewed by the district committee",
-        "Approved applicants receive loan disbursement within 45 days"
-      ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/community-enterprise (FICTIONAL URL)",
-      "lastUpdated": "2024-01-15"
-    },
-    {
-      "id": "DEMO-WE-002",
-      "name": "Women Entrepreneur Empowerment Initiative",
-      "ministry": "Demo Ministry of Women & Child Development (Fictional)",
-      "shortDescription": "Dedicated support for women entrepreneurs in service, trading, tailoring, and food businesses.",
-      "description": "This DEMO scheme is designed to empower women entrepreneurs by providing affordable credit, business development support, and market linkages. It targets women who want to start or expand their businesses in service, trading, tailoring/textiles, or food sectors.",
-      "targetBeneficiaries": "Women entrepreneurs aged 18–55 with annual family income up to ₹8 lakh",
-      "eligibility": {
-        "categories": ["ALL"],
+        "categories": [
+          "ALL"
+        ],
         "minAge": 18,
         "maxAge": 55,
-        "maxAnnualIncome": 800000,
-        "businessTypes": ["Service", "Trading", "Tailoring/Textiles", "Food"],
-        "states": ["ALL"],
-        "genders": ["Female"],
+        "maxAnnualIncome": 5000000,
+        "businessTypes": [
+          "Service",
+          "Other",
+          "Manufacturing",
+          "Agriculture"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
         "newBusinessAllowed": true,
         "existingBusinessAllowed": true,
         "maxProjectCost": 1500000
       },
       "benefits": [
-        "Loan up to ₹15 lakh at reduced interest rate",
-        "Margin money assistance of 30%",
-        "Free business skills training program",
-        "Market linkage and exhibition support",
-        "Online marketplace registration assistance"
+        "Financial assistance up to ₹15 Lakh",
+        "Capital subsidy up to 100%",
+        "Implemented via Ministry of MSME / Host Institutes (IITs, NITs, Incubators)",
+        "Official Portal: https://innovative.msme.gov.in/"
       ],
       "maximumLoanAmount": 1500000,
-      "interestRate": "6% per annum (subsidized)",
-      "repaymentTenure": "5 years with 6-month moratorium",
+      "interestRate": "Subsidized (up to 100% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
       "documents": [
+        "Idea / Proposal Presentation",
+        "Udyam Registration / Student ID",
         "Aadhaar Card",
-        "Income Certificate",
-        "Business Plan / Project Report",
-        "Bank Account Details",
-        "Address Proof",
-        "2 Passport-size Photographs"
+        "Proof of Concept Document"
       ],
       "applicationProcess": [
-        "Apply online through the demo portal or visit nearest DIC",
-        "Submit application with required documents",
-        "Attend a brief business readiness interview",
-        "Application reviewed within 30 days",
-        "Approved applicants receive disbursement and training schedule"
+        "Visit the official portal at https://innovative.msme.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (Ministry of MSME / Host Institutes (IITs, NITs, Incubators)) or bank for verification"
       ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/women-entrepreneur (FICTIONAL URL)",
-      "lastUpdated": "2024-02-20"
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://innovative.msme.gov.in/",
+      "lastUpdated": "2026-08-31T15:13:21.615417+00:00"
     },
     {
-      "id": "DEMO-YE-003",
-      "name": "Youth Startup Kickstart Programme",
-      "ministry": "Demo Ministry of Skill Development (Fictional)",
-      "shortDescription": "Support for young entrepreneurs aged 18–35 starting new businesses across all sectors.",
-      "description": "This DEMO programme encourages youth entrepreneurship by providing seed funding, mentorship, and incubation support for new business ventures. It is open to all social categories and covers all business types.",
-      "targetBeneficiaries": "Young entrepreneurs aged 18–35, all categories, starting new businesses",
+      "id": "acabc-09",
+      "name": "Agri-Clinics and Agri-Business Centres (AC&ABC)",
+      "ministry": "Ministry of Agriculture & Farmers Welfare / NABARD",
+      "shortDescription": "Subsidized loans for agricultural graduates and entrepreneurs to set up custom hiring, processing, and input businesses.",
+      "description": "Provides capital subsidy of 36% (General) and 44% (Women/SC/ST) on project cost up to ₹20 Lakh for individuals and up to ₹100 Lakh for groups of five to launch agri-ventures.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–60 years",
       "eligibility": {
-        "categories": ["ALL"],
+        "categories": [
+          "ALL"
+        ],
         "minAge": 18,
-        "maxAge": 35,
-        "maxAnnualIncome": 500000,
-        "businessTypes": ["ALL"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
+        "maxAge": 60,
+        "maxAnnualIncome": 5000000,
+        "businessTypes": [
+          "Agriculture",
+          "Trading",
+          "Service",
+          "Manufacturing"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
         "newBusinessAllowed": true,
-        "existingBusinessAllowed": false,
-        "maxProjectCost": 500000
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 2000000
       },
       "benefits": [
-        "Seed funding up to ₹5 lakh",
-        "6-month incubation support",
-        "Mentorship from industry experts",
-        "Co-working space access for 1 year",
-        "Networking and investor connect events"
+        "Financial assistance up to ₹20 Lakh",
+        "Capital subsidy up to 44%",
+        "Implemented via MANAGE & NABARD",
+        "Official Portal: https://www.acabcmis.gov.in/"
       ],
-      "maximumLoanAmount": 500000,
-      "interestRate": "4% per annum (subsidized)",
-      "repaymentTenure": "5 years with 1-year moratorium",
+      "maximumLoanAmount": 2000000,
+      "interestRate": "Subsidized (up to 44% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
       "documents": [
         "Aadhaar Card",
-        "Age Proof (Birth Certificate / 10th Marksheet)",
-        "Income Certificate",
-        "Detailed Business Plan",
-        "Educational Qualification Certificates",
-        "Bank Account Details"
+        "Degree/Diploma in Agriculture/Allied subjects or training certificate",
+        "Detailed Project Proposal",
+        "Bank Account details"
       ],
       "applicationProcess": [
-        "Register on the demo startup portal",
-        "Submit detailed business plan online",
-        "Shortlisted candidates attend a pitch session",
-        "Selected applicants receive seed funding",
-        "Quarterly progress reviews for continued support"
+        "Visit the official portal at https://www.acabcmis.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (MANAGE & NABARD) or bank for verification"
       ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/youth-startup (FICTIONAL URL)",
-      "lastUpdated": "2024-03-10"
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.acabcmis.gov.in/",
+      "lastUpdated": "2026-08-31T15:13:21.615417+00:00"
     },
     {
-      "id": "DEMO-RA-004",
-      "name": "Rural Artisan & Agri-Business Scheme",
-      "ministry": "Demo Ministry of Rural Development (Fictional)",
-      "shortDescription": "Support for rural entrepreneurs in agriculture, handicrafts, and food processing in selected states.",
-      "description": "This DEMO scheme supports rural entrepreneurs engaged in agriculture, handicrafts, and food processing businesses. It provides financial assistance, technical training, and market access to promote rural livelihoods in selected states.",
-      "targetBeneficiaries": "Rural entrepreneurs in agriculture, handicrafts, and food sectors in select states",
+      "id": "pmegp-01",
+      "name": "Prime Minister Employment Generation Programme (PMEGP)",
+      "ministry": "Ministry of MSME",
+      "shortDescription": "Credit-linked subsidy programme to generate self-employment opportunities through micro-enterprise establishment.",
+      "description": "PMEGP provides financial assistance for setting up new micro-enterprises in manufacturing (project cost up to ₹50 Lakh) and service sector (project cost up to ₹20 Lakh). Subsidies range from 15% to 35% depending on location and category.",
+      "targetBeneficiaries": "General, OBC, SC, ST, Minority (All genders), Age 18–70 years",
       "eligibility": {
-        "categories": ["ALL"],
+        "categories": [
+          "General",
+          "OBC",
+          "SC",
+          "ST",
+          "Minority"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 10000000,
+        "businessTypes": [
+          "Manufacturing",
+          "Service"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 5000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹50 Lakh",
+        "Capital subsidy up to 35%",
+        "Implemented via Khadi and Village Industries Commission (KVIC)",
+        "Official Portal: https://www.kviconline.gov.in/pmegpeportal/"
+      ],
+      "maximumLoanAmount": 5000000,
+      "interestRate": "Subsidized (up to 35% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Aadhaar Card",
+        "PAN Card",
+        "Detailed Project Report (DPR)",
+        "Caste Certificate",
+        "EDP Training Certificate"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://www.kviconline.gov.in/pmegpeportal/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (Khadi and Village Industries Commission (KVIC)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.kviconline.gov.in/pmegpeportal/",
+      "lastUpdated": "2026-08-31T14:57:45.834247+00:00"
+    },
+    {
+      "id": "pm-vishwakarma-02",
+      "name": "PM Vishwakarma Scheme",
+      "ministry": "Ministry of MSME / Skill Development",
+      "shortDescription": "Comprehensive support scheme for traditional artisans and craftspeople working with hands and tools.",
+      "description": "Offers PM Vishwakarma Certificate, skill training with stipend (₹500/day), toolkit grant (₹15,000), and collateral-free loans up to ₹3 Lakh at 5% interest rate with 8% interest subvention.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–65 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
         "minAge": 18,
         "maxAge": 65,
-        "maxAnnualIncome": 300000,
-        "businessTypes": ["Agriculture", "Handicrafts", "Food"],
-        "states": ["Bihar", "Jharkhand", "Odisha", "Chhattisgarh", "Madhya Pradesh", "Rajasthan", "Uttar Pradesh", "West Bengal", "Assam"],
-        "genders": ["ALL"],
-        "newBusinessAllowed": true,
-        "existingBusinessAllowed": true,
-        "maxProjectCost": 800000
-      },
-      "benefits": [
-        "Loan up to ₹8 lakh at subsidized rate",
-        "Capital subsidy of 35%",
-        "Technical training and skill upgradation",
-        "Raw material procurement support",
-        "Direct market linkage through government e-marketplace"
-      ],
-      "maximumLoanAmount": 800000,
-      "interestRate": "4% per annum (subsidized)",
-      "repaymentTenure": "7 years with 6-month moratorium",
-      "documents": [
-        "Aadhaar Card",
-        "Domicile Certificate",
-        "Income Certificate",
-        "Land Records (for agriculture)",
-        "Artisan Card (for handicrafts)",
-        "Business Plan / Project Report",
-        "Bank Account Details"
-      ],
-      "applicationProcess": [
-        "Visit the Block Development Office",
-        "Submit application with domicile and income proof",
-        "Field verification by block-level officer",
-        "Application reviewed by district committee",
-        "Approved applicants receive training followed by disbursement"
-      ],
-      "stateCoverage": "Bihar, Jharkhand, Odisha, Chhattisgarh, Madhya Pradesh, Rajasthan, Uttar Pradesh, West Bengal, Assam",
-      "sourceUrl": "https://demo-example.gov.in/rural-artisan (FICTIONAL URL)",
-      "lastUpdated": "2024-04-05"
-    },
-    {
-      "id": "DEMO-BE-005",
-      "name": "Business Expansion & Modernization Fund",
-      "ministry": "Demo Ministry of MSME (Fictional)",
-      "shortDescription": "Credit facility for existing businesses seeking expansion or modernization.",
-      "description": "This DEMO fund helps existing micro and small enterprises modernize their operations, upgrade technology, or expand capacity. It provides term loans at competitive rates with flexible repayment options.",
-      "targetBeneficiaries": "Existing business owners aged 21–60 with income up to ₹10 lakh",
-      "eligibility": {
-        "categories": ["ALL"],
-        "minAge": 21,
-        "maxAge": 60,
         "maxAnnualIncome": 1000000,
-        "businessTypes": ["Manufacturing", "Service", "Trading", "Food"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
-        "newBusinessAllowed": false,
-        "existingBusinessAllowed": true,
-        "maxProjectCost": 2500000
-      },
-      "benefits": [
-        "Term loan up to ₹25 lakh",
-        "Technology upgrade subsidy of 15%",
-        "Working capital assistance",
-        "Business process consulting",
-        "ISO certification support"
-      ],
-      "maximumLoanAmount": 2500000,
-      "interestRate": "8% per annum",
-      "repaymentTenure": "10 years with 1-year moratorium",
-      "documents": [
-        "Aadhaar Card / PAN Card",
-        "Business Registration Certificate",
-        "Last 3 years Financial Statements",
-        "Income Tax Returns",
-        "Project Report for Expansion",
-        "Bank Statements (last 12 months)",
-        "Existing Loan Details (if any)"
-      ],
-      "applicationProcess": [
-        "Apply at the nearest MSME District Office or online portal",
-        "Submit business registration and financial documents",
-        "Site inspection by MSME officer",
-        "Loan sanctioned by bank in coordination with MSME office",
-        "Disbursement in phases based on project milestones"
-      ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/business-expansion (FICTIONAL URL)",
-      "lastUpdated": "2024-05-15"
-    },
-    {
-      "id": "DEMO-MC-006",
-      "name": "Minority Community Enterprise Support Scheme",
-      "ministry": "Demo Ministry of Minority Affairs (Fictional)",
-      "shortDescription": "Financial and training support for minority community entrepreneurs in retail and trading.",
-      "description": "This DEMO scheme provides concessional credit and skill training to entrepreneurs from minority communities who want to set up or run small retail and trading businesses.",
-      "targetBeneficiaries": "Minority community entrepreneurs aged 18–55 with income up to ₹6 lakh",
-      "eligibility": {
-        "categories": ["Minority"],
-        "minAge": 18,
-        "maxAge": 55,
-        "maxAnnualIncome": 600000,
-        "businessTypes": ["Trading", "Service", "Food"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
+        "businessTypes": [
+          "Manufacturing",
+          "Service",
+          "Handicrafts"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
         "newBusinessAllowed": true,
         "existingBusinessAllowed": true,
-        "maxProjectCost": 800000
-      },
-      "benefits": [
-        "Loan up to ₹8 lakh at subsidized rate",
-        "Skill development program (2 weeks)",
-        "Margin money assistance of 20%",
-        "Hand-holding support for 1 year",
-        "Digital literacy training"
-      ],
-      "maximumLoanAmount": 800000,
-      "interestRate": "6% per annum (subsidized)",
-      "repaymentTenure": "5 years with 3-month moratorium",
-      "documents": [
-        "Aadhaar Card",
-        "Minority Community Certificate",
-        "Income Certificate",
-        "Business Plan / Project Report",
-        "Bank Account Details",
-        "Address Proof"
-      ],
-      "applicationProcess": [
-        "Apply at the nearest Minority Welfare Office or online",
-        "Submit application with minority certificate and income proof",
-        "Attend a skill assessment session",
-        "Application reviewed by state minority commission",
-        "Approved applicants receive training followed by loan disbursement"
-      ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/minority-enterprise (FICTIONAL URL)",
-      "lastUpdated": "2024-06-01"
-    },
-    {
-      "id": "DEMO-DA-007",
-      "name": "Divyang Entrepreneur Assistance Programme",
-      "ministry": "Demo Department of Empowerment of PwD (Fictional)",
-      "shortDescription": "Comprehensive support for differently-abled entrepreneurs across all business types.",
-      "description": "This DEMO programme offers financial assistance, assistive technology support, and accessible infrastructure grants to differently-abled entrepreneurs (Persons with Disabilities) who wish to start or expand their businesses.",
-      "targetBeneficiaries": "Differently-abled entrepreneurs aged 18–55 with income up to ₹5 lakh",
-      "eligibility": {
-        "categories": ["ALL"],
-        "minAge": 18,
-        "maxAge": 55,
-        "maxAnnualIncome": 500000,
-        "businessTypes": ["ALL"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
-        "newBusinessAllowed": true,
-        "existingBusinessAllowed": true,
-        "maxProjectCost": 1200000
-      },
-      "benefits": [
-        "Loan up to ₹12 lakh at special subsidized rate",
-        "Assistive technology grant up to ₹1 lakh",
-        "Accessible workplace infrastructure support",
-        "Dedicated business mentorship",
-        "Priority in government procurement"
-      ],
-      "maximumLoanAmount": 1200000,
-      "interestRate": "4% per annum (special subsidized)",
-      "repaymentTenure": "8 years with 1-year moratorium",
-      "documents": [
-        "Aadhaar Card",
-        "Disability Certificate (UDID Card)",
-        "Income Certificate",
-        "Business Plan / Project Report",
-        "Bank Account Details",
-        "Medical Certificate"
-      ],
-      "applicationProcess": [
-        "Register on the demo PwD entrepreneurship portal",
-        "Submit disability certificate and business plan",
-        "Accessibility assessment of proposed business location",
-        "Application reviewed by state disability commissioner",
-        "Approved applicants receive grants and loan disbursement"
-      ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/divyang-entrepreneur (FICTIONAL URL)",
-      "lastUpdated": "2024-07-20"
-    },
-    {
-      "id": "DEMO-OBC-008",
-      "name": "OBC Micro-Enterprise Development Scheme",
-      "ministry": "Demo Ministry of Social Justice (Fictional)",
-      "shortDescription": "Micro-loan support for OBC entrepreneurs starting small businesses.",
-      "description": "This DEMO scheme provides micro-loans and hand-holding support to entrepreneurs from Other Backward Classes (OBC) who want to set up small-scale businesses with low capital requirements.",
-      "targetBeneficiaries": "OBC entrepreneurs aged 18–50 with income up to ₹3 lakh",
-      "eligibility": {
-        "categories": ["OBC"],
-        "minAge": 18,
-        "maxAge": 50,
-        "maxAnnualIncome": 300000,
-        "businessTypes": ["Service", "Trading", "Food", "Tailoring/Textiles", "Handicrafts"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
-        "newBusinessAllowed": true,
-        "existingBusinessAllowed": false,
         "maxProjectCost": 300000
       },
       "benefits": [
-        "Micro-loan up to ₹3 lakh at subsidized rate",
-        "Interest subsidy of 3% for first 2 years",
-        "Basic business literacy training",
-        "Financial literacy and bookkeeping workshop",
-        "Linkage with local self-help groups"
+        "Financial assistance up to ₹3 Lakh",
+        "Interest rate subsidy of 8%",
+        "Implemented via MSME & MoSDE",
+        "Official Portal: https://pmvishwakarma.gov.in/"
       ],
       "maximumLoanAmount": 300000,
-      "interestRate": "7% per annum (with 3% subsidy for 2 years)",
-      "repaymentTenure": "3 years",
+      "interestRate": "8% Interest Subvention",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
       "documents": [
         "Aadhaar Card",
-        "OBC Certificate",
-        "Income Certificate",
-        "Simple Business Plan",
-        "Bank Account Details",
-        "Address Proof"
+        "Mobile linked with Aadhaar",
+        "Bank Account details",
+        "Trade Proof (Traditional Artisan declaration)"
       ],
       "applicationProcess": [
-        "Visit the nearest Common Service Centre (CSC)",
-        "Fill out the simplified application form",
-        "Submit OBC certificate and income proof",
-        "Application verified by block-level officer",
-        "Approved applicants receive micro-loan within 30 days"
+        "Visit the official portal at https://pmvishwakarma.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (MSME & MoSDE) or bank for verification"
       ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/obc-micro-enterprise (FICTIONAL URL)",
-      "lastUpdated": "2024-08-10"
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://pmvishwakarma.gov.in/",
+      "lastUpdated": "2026-08-31T14:57:45.834247+00:00"
     },
     {
-      "id": "DEMO-UW-009",
-      "name": "Urban Women Self-Help Enterprise Scheme",
-      "ministry": "Demo Ministry of Housing & Urban Affairs (Fictional)",
-      "shortDescription": "Support for urban women self-help groups in food processing and tailoring/textiles.",
-      "description": "This DEMO scheme provides financial and infrastructure support to women-led self-help groups in urban areas who are engaged in food processing, tailoring, textiles, and related micro-enterprises.",
-      "targetBeneficiaries": "Urban women SHG members aged 21–50 with income up to ₹4 lakh",
+      "id": "mudra-03",
+      "name": "Pradhan Mantri MUDRA Yojana (PMMY)",
+      "ministry": "Ministry of Finance (DFS)",
+      "shortDescription": "Provides collateral-free institutional credit up to ₹10 Lakh to non-corporate, non-farm small and micro enterprises.",
+      "description": "Provides loans across Shishu (up to ₹50,000), Kishore (₹50,001 to ₹5 Lakh), and Tarun (₹5 Lakh to ₹10 Lakh) without any collateral requirement.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–65 years",
       "eligibility": {
-        "categories": ["ALL"],
-        "minAge": 21,
-        "maxAge": 50,
-        "maxAnnualIncome": 400000,
-        "businessTypes": ["Food", "Tailoring/Textiles"],
-        "states": ["Delhi", "Maharashtra", "Karnataka", "Tamil Nadu", "Gujarat", "West Bengal", "Telangana", "Kerala"],
-        "genders": ["Female"],
-        "newBusinessAllowed": true,
-        "existingBusinessAllowed": true,
-        "maxProjectCost": 600000
-      },
-      "benefits": [
-        "Group loan up to ₹6 lakh per SHG member",
-        "Shared workspace/kitchen facility",
-        "Packaging and branding support",
-        "E-commerce onboarding assistance",
-        "Raw material bulk procurement support"
-      ],
-      "maximumLoanAmount": 600000,
-      "interestRate": "5% per annum (subsidized)",
-      "repaymentTenure": "4 years with 3-month moratorium",
-      "documents": [
-        "Aadhaar Card",
-        "SHG Registration Certificate",
-        "Income Certificate",
-        "Group Business Plan",
-        "Bank Account Details (SHG Account)",
-        "Urban Address Proof"
-      ],
-      "applicationProcess": [
-        "SHG must register with the Urban Local Body",
-        "Submit group application through the ULB office",
-        "Attend group assessment and business viability review",
-        "Application reviewed by city-level NULM committee",
-        "Approved SHGs receive training and phased disbursement"
-      ],
-      "stateCoverage": "Delhi, Maharashtra, Karnataka, Tamil Nadu, Gujarat, West Bengal, Telangana, Kerala",
-      "sourceUrl": "https://demo-example.gov.in/urban-women-shg (FICTIONAL URL)",
-      "lastUpdated": "2024-09-01"
-    },
-    {
-      "id": "DEMO-GL-010",
-      "name": "General Low-Income Livelihood Scheme",
-      "ministry": "Demo Ministry of Labour & Employment (Fictional)",
-      "shortDescription": "Micro-credit for low-income individuals across all categories to start small livelihood activities.",
-      "description": "This DEMO scheme provides micro-credit and basic training to low-income individuals from any social category who wish to start small-scale livelihood activities. It targets the most economically vulnerable sections.",
-      "targetBeneficiaries": "Low-income individuals aged 18–58, all categories, annual income below ₹2 lakh",
-      "eligibility": {
-        "categories": ["ALL"],
+        "categories": [
+          "ALL"
+        ],
         "minAge": 18,
-        "maxAge": 58,
-        "maxAnnualIncome": 200000,
-        "businessTypes": ["ALL"],
-        "states": ["ALL"],
-        "genders": ["ALL"],
+        "maxAge": 65,
+        "maxAnnualIncome": 5000000,
+        "businessTypes": [
+          "Manufacturing",
+          "Service",
+          "Trading"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
         "newBusinessAllowed": true,
         "existingBusinessAllowed": true,
-        "maxProjectCost": 200000
+        "maxProjectCost": 1000000
       },
       "benefits": [
-        "Micro-credit up to ₹2 lakh",
-        "Interest subsidy of 5% for first year",
-        "Basic entrepreneurship training (1 week)",
-        "Tool kit / equipment grant up to ₹25,000",
-        "Linkage with local market and buyers"
+        "Financial assistance up to ₹10 Lakh",
+        "Implemented via MUDRA / Commercial & Regional Rural Banks",
+        "Official Portal: https://www.mudra.org.in/"
       ],
-      "maximumLoanAmount": 200000,
-      "interestRate": "7% per annum (with 5% subsidy for 1 year)",
-      "repaymentTenure": "3 years",
+      "maximumLoanAmount": 1000000,
+      "interestRate": "Concessional / Bank Base Rate",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
       "documents": [
-        "Aadhaar Card",
-        "Income Certificate / BPL Card",
-        "Bank Account Details",
-        "Simple Business Idea Description",
-        "Address Proof"
+        "Identity Proof (Aadhaar/Voter ID)",
+        "Address Proof",
+        "Udyam Certificate",
+        "6 Months Bank Statement"
       ],
       "applicationProcess": [
-        "Visit the nearest employment exchange or CSC",
-        "Fill out the simplified application form",
-        "Submit income proof and identity documents",
-        "Brief interview by local employment officer",
-        "Approved applicants receive training and micro-credit within 45 days"
+        "Visit the official portal at https://www.mudra.org.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (MUDRA / Commercial & Regional Rural Banks) or bank for verification"
       ],
-      "stateCoverage": "All States and Union Territories",
-      "sourceUrl": "https://demo-example.gov.in/general-livelihood (FICTIONAL URL)",
-      "lastUpdated": "2024-10-15"
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.mudra.org.in/",
+      "lastUpdated": "2026-08-31T14:57:45.834247+00:00"
+    },
+    {
+      "id": "standup-india-04",
+      "name": "Stand-Up India Scheme for Women and SC/ST Entrepreneurs",
+      "ministry": "Ministry of Finance / SIDBI",
+      "shortDescription": "Facilitates bank loans between ₹10 Lakh and ₹1 Crore for greenfield enterprises set up by SC, ST, or Women borrowers.",
+      "description": "Provides bank financing between ₹10 Lakh and ₹1 Crore to encourage new business setups by SC/ST or Women entrepreneurs in manufacturing, service, or trading.",
+      "targetBeneficiaries": "SC, ST, General, OBC, Minority (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "SC",
+          "ST",
+          "General",
+          "OBC",
+          "Minority"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 20000000,
+        "businessTypes": [
+          "Manufacturing",
+          "Service",
+          "Trading"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 10000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹1 Crore",
+        "Implemented via SIDBI & Commercial Banks",
+        "Official Portal: https://www.standupmitra.in/"
+      ],
+      "maximumLoanAmount": 10000000,
+      "interestRate": "Concessional / Bank Base Rate",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Aadhaar Card",
+        "PAN Card",
+        "Caste Certificate (if SC/ST)",
+        "Project Proposal & Quotations"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://www.standupmitra.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (SIDBI & Commercial Banks) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.standupmitra.in/",
+      "lastUpdated": "2026-08-31T14:57:45.834247+00:00"
+    },
+    {
+      "id": "pmsvanidhi-05",
+      "name": "PM SVANidhi (Micro-Credit for Street Vendors)",
+      "ministry": "Ministry of Housing and Urban Affairs (MoHUA)",
+      "shortDescription": "Affordable working capital loan for street vendors to resume their livelihoods in urban areas.",
+      "description": "Provides working capital loans up to ₹50,000 with 7% interest subsidy on regular repayments and cashbacks on digital transactions.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 500000,
+        "businessTypes": [
+          "Trading",
+          "Service"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 50000
+      },
+      "benefits": [
+        "Financial assistance up to ₹50,000",
+        "Interest rate subsidy of 7%",
+        "Implemented via MoHUA & Urban Local Bodies (ULB)",
+        "Official Portal: https://pmsvanidhi.mohua.gov.in/"
+      ],
+      "maximumLoanAmount": 50000,
+      "interestRate": "7% Interest Subvention",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Aadhaar Card",
+        "Vending Certificate / Identity Card from ULB",
+        "Bank Account details"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://pmsvanidhi.mohua.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (MoHUA & Urban Local Bodies (ULB)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://pmsvanidhi.mohua.gov.in/",
+      "lastUpdated": "2026-08-31T14:57:45.834247+00:00"
+    },
+    {
+      "id": "sisfs-06",
+      "name": "Startup India Seed Fund Scheme (SISFS)",
+      "ministry": "Ministry of Commerce and Industry (DPIIT)",
+      "shortDescription": "Financial assistance to early-stage startups for proof of concept, prototype development, and market entry.",
+      "description": "Provides up to ₹20 Lakh grant for proof of concept/prototype and up to ₹50 Lakh debt/convertible debenture investment for scaling up.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–60 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 60,
+        "maxAnnualIncome": 10000000,
+        "businessTypes": [
+          "Service",
+          "Other",
+          "Manufacturing",
+          "Agriculture"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 5000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹50 Lakh",
+        "Implemented via DPIIT & Incubators",
+        "Official Portal: https://seedfund.startupindia.gov.in/"
+      ],
+      "maximumLoanAmount": 5000000,
+      "interestRate": "Concessional / Bank Base Rate",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "DPIIT Recognition Certificate",
+        "Pitch Deck",
+        "Incorporation Certificate"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://seedfund.startupindia.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (DPIIT & Incubators) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://seedfund.startupindia.gov.in/",
+      "lastUpdated": "2026-08-31T14:57:45.834247+00:00"
+    },
+    {
+      "id": "cgtmse-07",
+      "name": "Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE)",
+      "ministry": "Ministry of MSME / SIDBI",
+      "shortDescription": "Enables collateral-free credit facilities up to ₹5 Crore for new and existing Micro and Small Enterprises.",
+      "description": "Provides credit guarantee coverage up to 85% for micro-enterprises and women/SC/ST entrepreneurs, allowing commercial banks to disburse loans up to ₹5 Crore without demanding physical collateral or third-party guarantees.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 100000000,
+        "businessTypes": [
+          "Manufacturing",
+          "Service",
+          "Trading"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 50000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹5 Crore",
+        "Implemented via SIDBI & Member Lending Institutions (MLIs)",
+        "Official Portal: https://www.cgtmse.in/"
+      ],
+      "maximumLoanAmount": 50000000,
+      "interestRate": "Concessional / Bank Base Rate",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Udyam Registration Certificate",
+        "Detailed Business Project Report",
+        "KYC Documents (PAN, Aadhaar)",
+        "Bank Statements (12 months)",
+        "Audited Financial Statements (for existing units)"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://www.cgtmse.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (SIDBI & Member Lending Institutions (MLIs)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.cgtmse.in/",
+      "lastUpdated": "2026-08-31T15:13:21.615417+00:00"
+    },
+    {
+      "id": "pmfme-08",
+      "name": "Pradhan Mantri Formalisation of Micro Food Processing Enterprises (PMFME)",
+      "ministry": "Ministry of Food Processing Industries (MoFPI)",
+      "shortDescription": "35% credit-linked capital subsidy up to ₹10 Lakh for setting up or upgrading micro food processing units.",
+      "description": "Supports individual entrepreneurs, SHGs, and FPOs in establishing food processing businesses (dairy products, bakery, spices, pickles, packaging, fruit processing). Provides 35% capital subsidy (max ₹10 Lakh per individual unit) with only 10% beneficiary contribution.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–68 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 68,
+        "maxAnnualIncome": 10000000,
+        "businessTypes": [
+          "Food",
+          "Manufacturing",
+          "Agriculture"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 3000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹30 Lakh",
+        "Capital subsidy up to 35%",
+        "Implemented via MoFPI & State Nodal Agencies (SNA)",
+        "Official Portal: https://pmfme.mofpi.gov.in/"
+      ],
+      "maximumLoanAmount": 3000000,
+      "interestRate": "Subsidized (up to 35% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Aadhaar Card",
+        "PAN Card",
+        "Detailed Project Report (DPR)",
+        "Bank Statement (6 months)",
+        "FSSAI License / Registration",
+        "Electricity Bill / Proof of Premises"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://pmfme.mofpi.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (MoFPI & State Nodal Agencies (SNA)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://pmfme.mofpi.gov.in/",
+      "lastUpdated": "2026-08-31T15:18:11.173214+00:00"
+    },
+    {
+      "id": "mahila-samriddhi-09",
+      "name": "Mahila Samriddhi Yojana (MSY)",
+      "ministry": "Ministry of Social Justice and Empowerment / NBCFDC",
+      "shortDescription": "Concessional micro-credit up to ₹1.40 Lakh at 4% annual interest rate for women entrepreneurs.",
+      "description": "Provides micro-finance directly to women belonging to backward classes and underprivileged communities to start small businesses, beauty parlours, tailoring units, and grocery shops at an affordable 4% per annum interest rate.",
+      "targetBeneficiaries": "OBC, SC, ST, Minority (Female, Other), Age 18–55 years",
+      "eligibility": {
+        "categories": [
+          "OBC",
+          "SC",
+          "ST",
+          "Minority"
+        ],
+        "minAge": 18,
+        "maxAge": 55,
+        "maxAnnualIncome": 300000,
+        "businessTypes": [
+          "Service",
+          "Trading",
+          "Manufacturing",
+          "Handicrafts"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "Female",
+          "Other"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 140000
+      },
+      "benefits": [
+        "Financial assistance up to ₹1.4 Lakh",
+        "Interest rate subsidy of 6%",
+        "Implemented via NBCFDC & State Channelising Agencies (SCAs)",
+        "Official Portal: https://www.nbcfdc.gov.in/"
+      ],
+      "maximumLoanAmount": 140000,
+      "interestRate": "6% Interest Subvention",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Aadhaar Card",
+        "Caste / Backward Class Certificate",
+        "Income Certificate (Family income < ₹3 Lakh)",
+        "Bank Passbook copy",
+        "Passport size photos"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://www.nbcfdc.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (NBCFDC & State Channelising Agencies (SCAs)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.nbcfdc.gov.in/",
+      "lastUpdated": "2026-08-31T15:18:11.173214+00:00"
+    },
+    {
+      "id": "ahidf-10",
+      "name": "Animal Husbandry Infrastructure Development Fund (AHIDF)",
+      "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+      "shortDescription": "3% interest subvention on term loans up to 90% of project cost for dairy, poultry, meat, and animal feed plants.",
+      "description": "Incentivizes private enterprises, MSMEs, and FPOs to establish dairy processing plants, meat processing facilities, veterinary vaccine manufacturing, and animal feed plants with 3% interest subvention and up to 25% credit guarantee.",
+      "targetBeneficiaries": "All categories (All genders), Age 21–70 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 21,
+        "maxAge": 70,
+        "maxAnnualIncome": 500000000,
+        "businessTypes": [
+          "Agriculture",
+          "Manufacturing",
+          "Food"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 300000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹30 Crore",
+        "Interest rate subsidy of 3%",
+        "Implemented via DAHD & SIDBI",
+        "Official Portal: https://ahidf.udyamimitra.in/"
+      ],
+      "maximumLoanAmount": 300000000,
+      "interestRate": "3% Interest Subvention",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Udyam / Company Registration",
+        "Detailed Project Report (DPR) with cash flows",
+        "Land Ownership / Lease Documents",
+        "Pollution Control Board Clearance / NOC"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://ahidf.udyamimitra.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (DAHD & SIDBI) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://ahidf.udyamimitra.in/",
+      "lastUpdated": "2026-08-31T15:18:11.173214+00:00"
+    },
+    {
+      "id": "zed-scheme-11",
+      "name": "MSME Sustainable (ZED) Certification Scheme",
+      "ministry": "Ministry of MSME",
+      "shortDescription": "Up to 80% subsidy (₹5 Lakh per unit) on Zero Defect Zero Effect certification and clean manufacturing technology.",
+      "description": "Encourages MSMEs to adopt Zero Defect Zero Effect manufacturing practices. Provides financial assistance: 80% subsidy for Micro, 60% for Small, and 50% for Medium enterprises (with an additional 10% for Women/SC/ST owned units).",
+      "targetBeneficiaries": "All categories (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 50000000,
+        "businessTypes": [
+          "Manufacturing"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 10000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹5 Lakh",
+        "Capital subsidy up to 80%",
+        "Implemented via Quality Council of India (QCI) & MSME",
+        "Official Portal: https://zed.msme.gov.in/"
+      ],
+      "maximumLoanAmount": 500000,
+      "interestRate": "Subsidized (up to 80% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Udyam Registration Certificate",
+        "Plant & Machinery Geo-tagged photos",
+        "PAN Card & Aadhaar",
+        "Electricity Bill of Factory premises"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://zed.msme.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (Quality Council of India (QCI) & MSME) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://zed.msme.gov.in/",
+      "lastUpdated": "2026-08-31T15:18:11.173214+00:00"
+    },
+    {
+      "id": "samridh-12",
+      "name": "SAMRIDH Scheme (MeitY Startup Accelerator)",
+      "ministry": "Ministry of Electronics & Information Technology (MeitY)",
+      "shortDescription": "Up to ₹40 Lakh matching funding support for tech and software product startups through accelerators.",
+      "description": "Aims to scale software product startups by providing matching funding up to ₹40 Lakh along with mentorship, customer access, and global investor connections in sectors like SaaS, Fintech, Healthtech, and Edtech.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–60 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 60,
+        "maxAnnualIncome": 25000000,
+        "businessTypes": [
+          "Service",
+          "Other"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 4000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹40 Lakh",
+        "Capital subsidy up to 100%",
+        "Implemented via MeitY Startup Hub (MSH)",
+        "Official Portal: https://meitystartuphub.in/"
+      ],
+      "maximumLoanAmount": 4000000,
+      "interestRate": "Subsidized (up to 100% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "DPIIT Recognition Certificate",
+        "Pitch Deck & Financial Model",
+        "Incorporation Certificate",
+        "Product Demo / MVP link"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://meitystartuphub.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (MeitY Startup Hub (MSH)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://meitystartuphub.in/",
+      "lastUpdated": "2026-08-31T15:29:28.200063+00:00"
+    },
+    {
+      "id": "birac-big-13",
+      "name": "Biotechnology Ignition Grant (BIRAC BIG)",
+      "ministry": "Department of Biotechnology (DBT) / BIRAC",
+      "shortDescription": "Up to ₹50 Lakh equity-free grant for biotech, medtech, diagnostics, and healthcare innovators.",
+      "description": "Provides grant-in-aid up to ₹50 Lakh over 18 months to enable researchers, entrepreneurs, and startups to establish proof-of-concept for innovative biotech, medical devices, bio-agriculture, and pharma technologies.",
+      "targetBeneficiaries": "All categories (All genders), Age 20–65 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 20,
+        "maxAge": 65,
+        "maxAnnualIncome": 10000000,
+        "businessTypes": [
+          "Service",
+          "Other",
+          "Agriculture"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 5000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹50 Lakh",
+        "Capital subsidy up to 100%",
+        "Implemented via Biotechnology Industry Research Assistance Council (BIRAC)",
+        "Official Portal: https://birac.nic.in/big.php"
+      ],
+      "maximumLoanAmount": 5000000,
+      "interestRate": "Subsidized (up to 100% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Detailed R&D Project Proposal",
+        "Patent / IP documents (if any)",
+        "Degree / Academic credentials of Team",
+        "DPIIT Certificate / Company Incorporation"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://birac.nic.in/big.php",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (Biotechnology Industry Research Assistance Council (BIRAC)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://birac.nic.in/big.php",
+      "lastUpdated": "2026-08-31T15:29:28.200063+00:00"
+    },
+    {
+      "id": "nidhi-prayas-14",
+      "name": "NIDHI-PRAYAS (Promoting Young & Aspiring Innovators)",
+      "ministry": "Department of Science & Technology (DST)",
+      "shortDescription": "Up to ₹10 Lakh grant for converting innovative technical ideas into physical working prototypes.",
+      "description": "Supports young innovators and early-stage hardware/deeptech startups by providing grants up to ₹10 Lakh to build functional prototypes with access to state-of-the-art PRAYAS fabrication labs and incubator mentorship.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–45 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 45,
+        "maxAnnualIncome": 5000000,
+        "businessTypes": [
+          "Service",
+          "Other",
+          "Manufacturing"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 1000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹10 Lakh",
+        "Capital subsidy up to 100%",
+        "Implemented via DST & PRAYAS Centres (IITs/IIMs/NITs)",
+        "Official Portal: https://dst.gov.in/"
+      ],
+      "maximumLoanAmount": 1000000,
+      "interestRate": "Subsidized (up to 100% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Innovative Idea Concept Note",
+        "Bill of Materials (BoM) for Prototype",
+        "Aadhaar / ID Proof",
+        "Student / Innovator declaration"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://dst.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (DST & PRAYAS Centres (IITs/IIMs/NITs)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://dst.gov.in/",
+      "lastUpdated": "2026-08-31T15:29:28.200063+00:00"
+    },
+    {
+      "id": "idex-defence-15",
+      "name": "Innovations for Defence Excellence (iDEX)",
+      "ministry": "Ministry of Defence (DDP)",
+      "shortDescription": "Grants up to ₹1.5 Crore (and ₹10 Crore for iDEX Prime) for defence, aerospace, and cybersecurity innovation.",
+      "description": "Engages startups, MSMEs, and individual innovators to develop advanced defense solutions (drones, AI surveillance, tactical communications, aerospace tech) for the Indian Armed Forces with direct procurement opportunities.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–65 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 65,
+        "maxAnnualIncome": 100000000,
+        "businessTypes": [
+          "Service",
+          "Other"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 15000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹1.5 Crore",
+        "Capital subsidy up to 100%",
+        "Implemented via Defence Innovation Organisation (DIO)",
+        "Official Portal: https://idex.gov.in/"
+      ],
+      "maximumLoanAmount": 15000000,
+      "interestRate": "Subsidized (up to 100% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "DPIIT Startup Recognition",
+        "Technical Solution Proposal for Armed Forces Challenge",
+        "Company Incorporation Certificate",
+        "Security clearance declarations"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://idex.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (Defence Innovation Organisation (DIO)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://idex.gov.in/",
+      "lastUpdated": "2026-08-31T15:29:28.200063+00:00"
+    },
+    {
+      "id": "aspire-16",
+      "name": "A Scheme for Promotion of Innovation, Rural Industries and Entrepreneurship (ASPIRE)",
+      "ministry": "Ministry of MSME",
+      "shortDescription": "Grants up to ₹1 Crore to set up Livelihood Business Incubators (LBIs) and rural agro-tech enterprises.",
+      "description": "Promotes innovation and rural entrepreneurship by establishing business incubators. Provides up to ₹100 Lakh for setting up LBIs and up to ₹1 Crore seed capital for agro-rural business commercialization and skilling.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–65 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 65,
+        "maxAnnualIncome": 50000000,
+        "businessTypes": [
+          "Agriculture",
+          "Service",
+          "Other",
+          "Manufacturing",
+          "Food"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 10000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹1 Crore",
+        "Capital subsidy up to 100%",
+        "Implemented via Ministry of MSME & NSIC / KVIC",
+        "Official Portal: https://aspire.msme.gov.in/"
+      ],
+      "maximumLoanAmount": 10000000,
+      "interestRate": "Subsidized (up to 100% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Incubation Project Proposal",
+        "Udyam / Organization Registration",
+        "Detailed Project Report (DPR)",
+        "Land / Premises Proof"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://aspire.msme.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (Ministry of MSME & NSIC / KVIC) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://aspire.msme.gov.in/",
+      "lastUpdated": "2026-08-31T15:30:51.076362+00:00"
+    },
+    {
+      "id": "sfurti-17",
+      "name": "Scheme of Fund for Regeneration of Traditional Industries (SFURTI)",
+      "ministry": "Ministry of MSME",
+      "shortDescription": "Grants up to ₹2.5 Crore to ₹5 Crore for organizing traditional artisans and craftspersons into competitive clusters.",
+      "description": "Provides financial support to organize traditional artisans (Khadi, Village Industries, Coir, Bamboo, Handloom) into clusters. Offers up to ₹2.5 Crore for Regular Clusters (500 artisans) and up to ₹5 Crore for Major Clusters for common facility centers, modern machinery, and packaging.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 100000000,
+        "businessTypes": [
+          "Handicrafts",
+          "Manufacturing",
+          "Tailoring/Textiles"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 50000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹5 Crore",
+        "Capital subsidy up to 90%",
+        "Implemented via KVIC, Coir Board & Nodal Agencies",
+        "Official Portal: https://sfurti.msme.gov.in/"
+      ],
+      "maximumLoanAmount": 50000000,
+      "interestRate": "Subsidized (up to 90% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Cluster Proposal / Diagnostic Study Report (DSR)",
+        "Artisan / Beneficiary List (min 500 members)",
+        "Society / SPV / Trust Registration",
+        "Land documentation for Common Facility Centre"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://sfurti.msme.gov.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (KVIC, Coir Board & Nodal Agencies) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://sfurti.msme.gov.in/",
+      "lastUpdated": "2026-08-31T15:30:51.076362+00:00"
+    },
+    {
+      "id": "clcss-18",
+      "name": "Credit Linked Capital Subsidy for Technology Upgradation (CLCSS)",
+      "ministry": "Ministry of MSME",
+      "shortDescription": "15% upfront capital subsidy up to ₹15 Lakh for micro and small manufacturing enterprises modernizing plant & machinery.",
+      "description": "Facilitates technology upgradation by providing a 15% upfront capital subsidy (up to ₹15 Lakh on institutional credit up to ₹1 Crore) for Micro and Small Enterprises in designated manufacturing sub-sectors to install state-of-the-art energy-efficient equipment.",
+      "targetBeneficiaries": "All categories (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "ALL"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 100000000,
+        "businessTypes": [
+          "Manufacturing"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 10000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹1 Crore",
+        "Capital subsidy up to 15%",
+        "Implemented via SIDBI, NABARD & Commercial Banks",
+        "Official Portal: https://my.msme.gov.in/mymsme/Scheme.aspx"
+      ],
+      "maximumLoanAmount": 10000000,
+      "interestRate": "Subsidized (up to 15% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Udyam Registration Certificate",
+        "Bank Term Loan Sanction Letter",
+        "Machinery Quotations / Invoices",
+        "Audited Financial Statements"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://my.msme.gov.in/mymsme/Scheme.aspx",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (SIDBI, NABARD & Commercial Banks) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://my.msme.gov.in/mymsme/Scheme.aspx",
+      "lastUpdated": "2026-08-31T15:30:51.076362+00:00"
+    },
+    {
+      "id": "sc-st-hub-19",
+      "name": "National SC-ST Hub - Special Credit Linked Capital Subsidy (SCLCSS)",
+      "ministry": "Ministry of MSME / NSIC",
+      "shortDescription": "25% upfront capital subsidy up to ₹25 Lakh on institutional loans for SC/ST MSME entrepreneurs.",
+      "description": "Provides 25% upfront capital subsidy (maximum ₹25 Lakh) on institutional credit up to ₹1 Crore for purchasing plant, machinery, and equipment for SC/ST-owned enterprises, along with marketing, capacity building, and 4% mandatory public procurement facilitation.",
+      "targetBeneficiaries": "SC, ST (All genders), Age 18–70 years",
+      "eligibility": {
+        "categories": [
+          "SC",
+          "ST"
+        ],
+        "minAge": 18,
+        "maxAge": 70,
+        "maxAnnualIncome": 50000000,
+        "businessTypes": [
+          "Manufacturing",
+          "Service"
+        ],
+        "states": [
+          "ALL"
+        ],
+        "genders": [
+          "ALL"
+        ],
+        "newBusinessAllowed": true,
+        "existingBusinessAllowed": true,
+        "maxProjectCost": 10000000
+      },
+      "benefits": [
+        "Financial assistance up to ₹1 Crore",
+        "Capital subsidy up to 25%",
+        "Implemented via National Small Industries Corporation (NSIC)",
+        "Official Portal: https://www.scsthub.in/"
+      ],
+      "maximumLoanAmount": 10000000,
+      "interestRate": "Subsidized (up to 25% capital grant)",
+      "repaymentTenure": "3 to 7 Years (Bank terms apply)",
+      "documents": [
+        "Aadhaar Card",
+        "Caste Certificate (SC/ST)",
+        "Udyam Registration Certificate (min 51% SC/ST shareholding)",
+        "Bank Term Loan Sanction Letter",
+        "Machinery Invoices"
+      ],
+      "applicationProcess": [
+        "Visit the official portal at https://www.scsthub.in/",
+        "Register with Aadhaar and enter personal & business details",
+        "Upload required documents and project report",
+        "Submit to nodal agency (National Small Industries Corporation (NSIC)) or bank for verification"
+      ],
+      "stateCoverage": "All States and Union Territories (Pan-India)",
+      "sourceUrl": "https://www.scsthub.in/",
+      "lastUpdated": "2026-08-31T15:30:51.076362+00:00"
     }
   ]
 }
-

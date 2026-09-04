@@ -1,6 +1,23 @@
 import { Scheme, UserProfile, MatchResult, EligibilityStatus, normalizeStateName, formatCurrency } from '@/types';
 import { incomeRangeToMaxValue } from '@/types';
-import { getAllSchemes } from './schemeService';
+import { getAllSchemes, getAllSchemesAsync } from './schemeService';
+
+export async function matchSchemesAsync(profile: UserProfile): Promise<MatchResult[]> {
+  const schemes = await getAllSchemesAsync();
+  const results = schemes.map((scheme) => matchSingleScheme(profile, scheme));
+
+  return results.sort((a, b) => {
+    const statusWeight = {
+      'Eligible': 3,
+      'Potentially Eligible': 2,
+      'Not Eligible': 1,
+    };
+    if (statusWeight[a.status] !== statusWeight[b.status]) {
+      return statusWeight[b.status] - statusWeight[a.status];
+    }
+    return b.score - a.score;
+  });
+}
 
 export function matchSchemes(profile: UserProfile): MatchResult[] {
   const schemes = getAllSchemes();

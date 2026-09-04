@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { matchSchemes } from '@/services/matchingEngine';
+import { matchSchemesAsync } from '@/services/matchingEngine';
 import { UserProfile } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User profile is required' }, { status: 400 });
     }
     
-    const matches = matchSchemes(profile);
+    const matches = await matchSchemesAsync(profile);
     
     return NextResponse.json({ matches });
   } catch (error) {

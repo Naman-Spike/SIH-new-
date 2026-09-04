@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleChatMessage } from '@/services/chatbotService';
-import { getSchemeById } from '@/services/schemeService';
+import { getSchemeByIdAsync } from '@/services/schemeService';
 import { matchSingleScheme } from '@/services/matchingEngine';
 
 export async function POST(request: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Message and schemeId are required' }, { status: 400 });
     }
     
-    const scheme = getSchemeById(schemeId);
+    const scheme = await getSchemeByIdAsync(schemeId);
     if (!scheme) {
       return NextResponse.json({ error: 'Scheme not found' }, { status: 404 });
     }
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     let currentMatchResult = matchResult || null;
     
     if (!currentMatchResult && userProfile) {
-        currentMatchResult = matchSingleScheme(userProfile, scheme);
+      currentMatchResult = matchSingleScheme(userProfile, scheme);
     }
     
     const response = handleChatMessage(message, scheme, userProfile || null, currentMatchResult);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSchemeById } from '@/services/schemeService';
+import { getSchemeByIdAsync } from '@/services/schemeService';
 
 export async function GET(
   request: NextRequest,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = params;
-    const scheme = getSchemeById(id);
+    const scheme = await getSchemeByIdAsync(id);
     
     if (!scheme) {
       return NextResponse.json({ error: 'Scheme not found' }, { status: 404 });
