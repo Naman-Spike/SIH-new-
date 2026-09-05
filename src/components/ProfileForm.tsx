@@ -80,6 +80,8 @@ export default function ProfileForm() {
     }
     // Update normalized state in form
     setFormData((prev) => ({ ...prev, state: normalizedState }));
+
+    if (!formData.city || !formData.city.trim()) return 'Please enter your city or district.';
     
     if (!formData.category) return 'Please select a social category.';
     return '';
@@ -279,6 +281,18 @@ export default function ProfileForm() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <label className="label-text">City / District</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city || ''}
+                onChange={handleChange}
+                className="input-field"
+                placeholder="e.g. Lucknow, Gurugram, Jaipur, Pune, Mumbai"
+              />
             </div>
             
             <div>

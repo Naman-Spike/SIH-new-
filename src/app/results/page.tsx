@@ -90,7 +90,7 @@ export default function ResultsPage() {
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Match Results</span>
           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight mt-1">Your Recommended Schemes</h1>
           <p className="text-sm text-neutral-500 mt-1">
-            Found {displayableResults.length} {displayableResults.length === 1 ? 'scheme' : 'schemes'} that 100% match your profile for <span className="font-semibold text-neutral-800">{userProfile.state}</span> ({userProfile.category} category).
+            Found {displayableResults.length} {displayableResults.length === 1 ? 'scheme' : 'schemes'} that 100% match your profile for <span className="font-semibold text-neutral-800">{userProfile.city ? `${userProfile.city}, ` : ''}{userProfile.state}</span> ({userProfile.category} category).
           </p>
         </div>
         <Link 

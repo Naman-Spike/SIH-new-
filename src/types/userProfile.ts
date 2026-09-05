@@ -29,6 +29,7 @@ export interface UserProfile {
   age: number;
   gender: Gender;
   state: string;
+  city?: string;
   category: Category;
   annualIncome: IncomeRange;
   businessStatus: BusinessStatus;
