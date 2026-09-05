@@ -152,32 +152,46 @@ export default function ProfileForm() {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-neutral-200 p-6 sm:p-10 max-w-2xl mx-auto shadow-sm">
+    <div className="bg-white rounded-3xl border border-neutral-200/90 p-6 sm:p-10 max-w-2xl mx-auto shadow-xl shadow-neutral-100/50">
       {/* Step Progress Indicator */}
-      <div className="mb-10">
+      <div className="mb-10 max-w-md mx-auto">
         <div className="flex items-center justify-between relative">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-neutral-200 z-0"></div>
+          <div className="absolute left-6 right-6 top-4 h-[1px] bg-neutral-200 z-0"></div>
           <div 
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-black z-0 transition-all duration-300" 
+            className="absolute left-6 top-4 h-[1px] bg-black z-0 transition-all duration-300" 
             style={{ width: `${((step - 1) / 2) * 100}%` }}
           ></div>
           
-          {[1, 2, 3].map((num) => (
-            <div key={num} className="relative z-10 flex flex-col items-center">
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 ${
-                step > num 
-                  ? 'bg-black text-white' 
-                  : step === num 
-                  ? 'bg-black text-white ring-4 ring-neutral-200' 
-                  : 'bg-white border-2 border-neutral-300 text-neutral-400'
-              }`}>
-                {step > num ? <Check className="w-4 h-4" /> : num}
+          {[
+            { num: 1, label: 'Personal' },
+            { num: 2, label: 'Business' },
+            { num: 3, label: 'Financial' },
+          ].map((item) => {
+            const isCompleted = step > item.num;
+            const isCurrent = step === item.num;
+            return (
+              <div key={item.num} className="relative z-10 flex flex-col items-center">
+                <div 
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all duration-200 ${
+                    isCurrent || isCompleted
+                      ? 'bg-black text-white font-bold'
+                      : 'bg-white border border-neutral-300 text-neutral-400 font-medium'
+                  }`}
+                >
+                  {isCompleted ? <Check className="w-3.5 h-3.5" /> : item.num}
+                </div>
+                <span 
+                  className={`text-xs mt-2 transition-colors ${
+                    isCurrent || isCompleted 
+                      ? 'text-neutral-900 font-bold' 
+                      : 'text-neutral-400 font-normal'
+                  }`}
+                >
+                  {item.label}
+                </span>
               </div>
-              <span className={`text-xs mt-2 font-medium tracking-tight ${step >= num ? 'text-black font-semibold' : 'text-neutral-400'}`}>
-                {num === 1 ? 'Personal' : num === 2 ? 'Business' : 'Financial'}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

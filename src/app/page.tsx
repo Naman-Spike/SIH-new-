@@ -6,15 +6,20 @@ export default function Home() {
   return (
     <div className="flex flex-col max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 w-full space-y-12">
       {/* Minimalist Hero Section */}
-      <section className="bg-white border border-neutral-200 rounded-3xl p-8 sm:p-14 lg:p-16 text-center shadow-sm relative overflow-hidden">
-        <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-100 border border-neutral-200 text-xs font-semibold text-neutral-800 mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>AI-Driven Government Scheme Matching</span>
+      <section className="bg-white border border-neutral-200/90 rounded-3xl p-8 sm:p-14 lg:p-16 text-center shadow-xl shadow-neutral-100/50 relative overflow-hidden">
+        {/* Soft atmospheric gradient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-blue-100/50 via-indigo-50/30 to-transparent blur-3xl opacity-70 pointer-events-none -z-0 -translate-y-24" />
+
+        <div className="max-w-3xl mx-auto relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/80 border border-blue-100 text-xs font-semibold text-blue-600 mb-6">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>AI-Assisted Government Scheme Discovery</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-950 tracking-tight mb-6 leading-tight">
-            Find Government Schemes That Match You
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-900 tracking-tight mb-6 leading-[1.15]">
+            Find the <span className="text-blue-600">Right Government</span>
+            <br />
+            <span className="text-indigo-600">Scheme</span> for You
           </h1>
           
           <p className="text-lg sm:text-xl text-neutral-600 mb-10 max-w-2xl mx-auto leading-relaxed">
