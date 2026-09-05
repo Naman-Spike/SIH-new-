@@ -25,7 +25,8 @@ export function handleChatMessage(
       }
       return response;
     }
-    return `To tell you if you are eligible for ${scheme.name}, I need your profile information. Generally, it requires: ${scheme.eligibility.categories?.join(', ')} categories, age between ${scheme.eligibility.minAge || 18}-${scheme.eligibility.maxAge || 65}.`;
+    const statesInfo = scheme.eligibility.states?.includes('ALL') ? 'Pan-India' : scheme.eligibility.states?.join(', ');
+    return `To evaluate if you qualify for **${scheme.name}**, please share:\n- **Age & Gender** (Scheme covers: ${scheme.eligibility.minAge || 18}–${scheme.eligibility.maxAge || 65} yrs, ${scheme.eligibility.genders?.join('/') || 'All'})\n- **State and City / District** (Coverage: ${statesInfo})\n- **Social Category** (Eligible: ${scheme.eligibility.categories?.join(', ') || 'All'})\n- **Business Sector & Required Funding** (Max limit: ${scheme.maximumLoanAmount ? formatCurrency(scheme.maximumLoanAmount) : 'Varies'})`;
   }
 
   // Document questions

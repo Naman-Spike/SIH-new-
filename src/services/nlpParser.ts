@@ -97,5 +97,18 @@ export function parseNaturalLanguageProfile(text: string): Partial<UserProfile> 
     }
   }
 
+  // City / District extraction
+  const cityRegex = /(?:in|from|city|district|living in|located in|at)\s+([a-zA-Z]+)(?:[,\s]+(?:city|district|town))?/i;
+  const cityMatch = text.match(cityRegex);
+  if (cityMatch && cityMatch[1]) {
+    const candidate = cityMatch[1].trim();
+    const commonWords = ['a', 'the', 'my', 'our', 'new', 'start', 'general', 'sc', 'st', 'obc', 'female', 'male', 'india'];
+    const isState = INDIAN_STATES.some((s) => s.toLowerCase() === candidate.toLowerCase()) || 
+                    Object.keys(STATE_ALIASES).some((a) => a.toLowerCase() === candidate.toLowerCase());
+    if (!commonWords.includes(candidate.toLowerCase()) && !isState && candidate.length > 2) {
+      profile.city = candidate.charAt(0).toUpperCase() + candidate.slice(1);
+    }
+  }
+
   return profile;
 }

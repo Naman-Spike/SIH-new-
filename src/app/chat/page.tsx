@@ -1,237 +1,407 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, Sparkles, ArrowRight } from 'lucide-react';
-import { STATE_ALIASES, normalizeStateName, INDIAN_STATES } from '@/types';
+import { Loader2, Sparkles, ArrowRight, Send, User, Bot, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { STATE_ALIASES, normalizeStateName, INDIAN_STATES, formatCurrency } from '@/types';
 import type { UserProfile } from '@/types';
 import Disclaimer from '@/components/Disclaimer';
 
+interface ChatMessage {
+  id: string;
+  sender: 'assistant' | 'user';
+  text: string;
+}
+
 export default function ChatModePage() {
   const router = useRouter();
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'msg-0',
+      sender: 'assistant',
+      text: "Hello! I am your Udhyog-Setu AI Assistant. I will guide you with a few quick questions to find government schemes that 100% match your profile.\n\nTo start: What is your **age** and **gender**?",
+    },
+  ]);
   const [inputText, setInputText] = useState('');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isMatching, setIsMatching] = useState(false);
-  const [extractedProfile, setExtractedProfile] = useState<Partial<UserProfile> | null>(null);
-  const [error, setError] = useState('');
+  const [profile, setProfile] = useState<Partial<UserProfile>>({
+    existingBusiness: false,
+    existingLoan: false,
+    annualIncome: '₹2.5–5 lakh',
+    businessStatus: 'Starting a new business',
+  });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const parseTextClientSide = (text: string): Partial<UserProfile> => {
-    const profile: Partial<UserProfile> = {
-      existingBusiness: false,
-      existingLoan: false,
-    };
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-    // Age
-    const ageMatch = text.match(/(\d{2})\s*(?:year|yr|age|years old)/i);
-    if (ageMatch) profile.age = parseInt(ageMatch[1], 10);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    // Gender
-    const genderMatch = text.match(/\b(woman|female|women|man|male|men)\b/i);
-    if (genderMatch) {
-      const g = genderMatch[1].toLowerCase();
-      if (['woman', 'female', 'women'].includes(g)) profile.gender = 'Female';
-      else if (['man', 'male', 'men'].includes(g)) profile.gender = 'Male';
+  const parseMessage = (text: string, current: Partial<UserProfile>): Partial<UserProfile> => {
+    const updated = { ...current };
+    const lower = text.toLowerCase();
+
+    // 1. Age
+    const ageMatch = text.match(/(\d{2})\s*(?:year|yr|age|years old)?/i);
+    if (ageMatch && parseInt(ageMatch[1], 10) >= 18 && parseInt(ageMatch[1], 10) <= 100) {
+      updated.age = parseInt(ageMatch[1], 10);
     }
 
-    // Category
-    const categoryMatch = text.match(/\b(SC|ST|OBC|minority|general)\b/i);
-    if (categoryMatch) {
-      const c = categoryMatch[1].toUpperCase();
-      if (['SC', 'ST', 'OBC'].includes(c)) profile.category = c as any;
-      else if (c === 'MINORITY') profile.category = 'Minority';
-      else profile.category = 'General';
-    }
+    // 2. Gender
+    if (lower.match(/\b(woman|female|women|girl)\b/)) updated.gender = 'Female';
+    else if (lower.match(/\b(man|male|men|boy)\b/)) updated.gender = 'Male';
+    else if (lower.match(/\b(other|transgender)\b/)) updated.gender = 'Other';
 
-    // State extraction with abbreviation/alias support (e.g. UP, HR, DL, MP, RJ)
+    // 3. State
     for (const [alias, fullState] of Object.entries(STATE_ALIASES)) {
       const pattern = new RegExp(`\\b${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
       if (pattern.test(text)) {
-        profile.state = fullState;
+        updated.state = fullState;
         break;
       }
     }
-    if (!profile.state) {
-      for (const state of INDIAN_STATES) {
-        if (text.toLowerCase().includes(state.toLowerCase())) {
-          profile.state = state;
+    if (!updated.state) {
+      for (const st of INDIAN_STATES) {
+        if (lower.includes(st.toLowerCase())) {
+          updated.state = st;
           break;
         }
       }
     }
 
-    // Business Type
-    const lowerText = text.toLowerCase();
-    if (lowerText.includes('farm') || lowerText.includes('agri')) profile.businessType = 'Agriculture';
-    else if (lowerText.includes('manufactur')) profile.businessType = 'Manufacturing';
-    else if (lowerText.includes('shop') || lowerText.includes('retail') || lowerText.includes('trad')) profile.businessType = 'Trading';
-    else if (lowerText.includes('service') || lowerText.includes('consult')) profile.businessType = 'Service';
-    else if (lowerText.includes('tailor') || lowerText.includes('textile') || lowerText.includes('cloth')) profile.businessType = 'Tailoring/Textiles';
-    else if (lowerText.includes('food') || lowerText.includes('cook') || lowerText.includes('restaurant')) profile.businessType = 'Food';
-    else if (lowerText.includes('handicraft') || lowerText.includes('craft') || lowerText.includes('artisan')) profile.businessType = 'Handicrafts';
-    else if (lowerText.includes('tech') || lowerText.includes('software')) profile.businessType = 'Other';
-    
-    // Project Cost / Loan Requirement
-    const lakhMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac)s?/i);
-    if (lakhMatch) {
-      profile.projectCost = parseFloat(lakhMatch[1]) * 100000;
-    } else {
-      const numMatch = text.match(/(?:need|require|want|loan of)\s*(?:rs\.?|rupees|₹)?\s*(\d+(?:,\d+)*)/i);
-      if (numMatch) {
-        profile.projectCost = parseInt(numMatch[1].replace(/,/g, ''), 10);
+    // 4. City / District
+    const cityRegex = /(?:in|from|city|district|at|near|living in|located in)\s+([a-zA-Z]+)(?:[,\s]+(?:city|district|town))?/i;
+    const cityMatch = text.match(cityRegex);
+    if (cityMatch && cityMatch[1]) {
+      const cand = cityMatch[1].trim();
+      const ignore = ['a', 'the', 'my', 'our', 'new', 'general', 'sc', 'st', 'obc', 'female', 'male', 'india', 'state', 'want', 'need'];
+      const isState = INDIAN_STATES.some((s) => s.toLowerCase() === cand.toLowerCase()) ||
+                      Object.keys(STATE_ALIASES).some((a) => a.toLowerCase() === cand.toLowerCase());
+      if (!ignore.includes(cand.toLowerCase()) && !isState && cand.length > 2) {
+        updated.city = cand.charAt(0).toUpperCase() + cand.slice(1);
+      }
+    } else if (updated.state && !updated.city) {
+      // If user typed e.g. "Lucknow, UP" or "Pune"
+      const parts = text.split(/[,;\s]+/).map((p) => p.trim());
+      for (const p of parts) {
+        const isState = INDIAN_STATES.some((s) => s.toLowerCase() === p.toLowerCase()) ||
+                        Object.keys(STATE_ALIASES).some((a) => a.toLowerCase() === p.toLowerCase());
+        const ignore = ['and', 'from', 'in', 'i', 'am', 'im', 'live', 'living', 'at', 'near', 'my', 'the'];
+        if (!isState && !ignore.includes(p.toLowerCase()) && p.length > 2 && /^[a-zA-Z]+$/.test(p)) {
+          updated.city = p.charAt(0).toUpperCase() + p.slice(1);
+          break;
+        }
       }
     }
 
-    return profile;
+    // 5. Category
+    if (lower.match(/\b(sc)\b/)) updated.category = 'SC';
+    else if (lower.match(/\b(st)\b/)) updated.category = 'ST';
+    else if (lower.match(/\b(obc)\b/)) updated.category = 'OBC';
+    else if (lower.match(/\b(minority|muslim|christian|sikh|jain|buddhist)\b/)) updated.category = 'Minority';
+    else if (lower.match(/\b(general|unreserved|ur)\b/)) updated.category = 'General';
+
+    // 6. Sector
+    if (lower.match(/(farm|agri|crop|dairy|poultry)/)) updated.businessType = 'Agriculture';
+    else if (lower.match(/(manufactur|factory|product|plant|mak)/)) updated.businessType = 'Manufacturing';
+    else if (lower.match(/(food|cook|bakery|canteen|restaurant|cafe|snack)/)) updated.businessType = 'Food';
+    else if (lower.match(/(tailor|textile|cloth|boutique|garment|stitch)/)) updated.businessType = 'Tailoring/Textiles';
+    else if (lower.match(/(craft|handicraft|artisan|pottery|leather)/)) updated.businessType = 'Handicrafts';
+    else if (lower.match(/(shop|retail|trad|store|mart|wholesal|sell|distribut)/)) updated.businessType = 'Trading';
+    else if (lower.match(/(service|repair|salon|consult|clean|it|software|agency)/)) updated.businessType = 'Service';
+
+    // 7. Project Cost
+    const lakhMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|lacs|lakhs)/i);
+    if (lakhMatch) {
+      updated.projectCost = parseFloat(lakhMatch[1]) * 100000;
+    } else {
+      const numMatch = text.match(/(?:need|require|cost|loan|funding|project of)?\s*(?:rs\.?|rupees|₹)?\s*(\d{5,8})/i);
+      if (numMatch) {
+        updated.projectCost = parseInt(numMatch[1], 10);
+      }
+    }
+
+    return updated;
   };
 
-  const handleAnalyze = () => {
-    if (!inputText.trim()) {
-      setError('Please describe your profile and business needs.');
+  const getNextPrompt = (p: Partial<UserProfile>): string | null => {
+    if (!p.age || !p.gender) {
+      return "Please tell me your **age** (between 18 and 100) and **gender** (Male, Female, or Other).";
+    }
+    if (!p.state) {
+      return "Which **State** (e.g. UP, HR, Maharashtra, Delhi) and **City / District** are you located in?";
+    }
+    if (!p.city) {
+      return `Got it, ${p.state}! What is your **City or District**?`;
+    }
+    if (!p.category) {
+      return "What is your **social category**? (Options: General, OBC, SC, ST, or Minority)";
+    }
+    if (!p.businessType) {
+      return "What type of **business industry or sector** are you starting or running? (e.g. Manufacturing, Food, Service, Trading, Agriculture, Tailoring, Handicrafts)";
+    }
+    if (!p.projectCost) {
+      return "What is your estimated **project cost or loan requirement** in ₹? (e.g. 3 Lakh, 5 Lakh, 10 Lakh)";
+    }
+    return null; // All collected!
+  };
+
+  const handleSend = (textToSend?: string) => {
+    const raw = (textToSend || inputText).trim();
+    if (!raw) return;
+
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      sender: 'user',
+      text: raw,
+    };
+
+    const newProfile = parseMessage(raw, profile);
+    setProfile(newProfile);
+    setInputText('');
+
+    const nextPrompt = getNextPrompt(newProfile);
+
+    let botResponseText = '';
+    if (nextPrompt) {
+      botResponseText = nextPrompt;
+    } else {
+      botResponseText = `🎉 **Profile Complete!** Here is what we collected:\n\n` +
+        `• **Age & Gender**: ${newProfile.age} yrs, ${newProfile.gender}\n` +
+        `• **Location**: ${newProfile.city ? `${newProfile.city}, ` : ''}${newProfile.state}\n` +
+        `• **Category**: ${newProfile.category}\n` +
+        `• **Sector**: ${newProfile.businessType}\n` +
+        `• **Project Requirement**: ${newProfile.projectCost ? formatCurrency(newProfile.projectCost) : '₹5 Lakh'}\n\n` +
+        `You can now view all schemes that **100% match** your profile!`;
+    }
+
+    const botMessage: ChatMessage = {
+      id: `bot-${Date.now() + 1}`,
+      sender: 'assistant',
+      text: botResponseText,
+    };
+
+    setMessages((prev) => [...prev, userMessage, botMessage]);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleMatchSchemes = async () => {
+    if (!profile.age || !profile.gender || !profile.state || !profile.category || !profile.businessType || !profile.projectCost) {
       return;
     }
 
-    setError('');
-    setIsAnalyzing(true);
-    setExtractedProfile(null);
-
-    // Simulate analysis delay
-    setTimeout(() => {
-      const extracted = parseTextClientSide(inputText);
-      setExtractedProfile(extracted);
-      setIsAnalyzing(false);
-    }, 1000);
-  };
-
-  const handleMatch = async () => {
-    if (!extractedProfile) return;
-
     setIsMatching(true);
-    setError('');
 
     try {
       const response = await fetch('/api/match-schemes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(extractedProfile),
+        body: JSON.stringify(profile),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to match schemes');
-      }
+      if (!response.ok) throw new Error('Failed to match schemes');
 
       const data = await response.json();
-      
-      sessionStorage.setItem('user-profile', JSON.stringify(extractedProfile));
+      sessionStorage.setItem('user-profile', JSON.stringify(profile));
       sessionStorage.setItem('match-results', JSON.stringify(data.matches));
-      
+
       router.push('/results');
-    } catch (err: any) {
-      setError(err.message || 'An error occurred. Please try again.');
+    } catch (err) {
+      console.error('Matching failed:', err);
       setIsMatching(false);
     }
   };
 
+  const isProfileComplete = Boolean(
+    profile.age &&
+    profile.gender &&
+    profile.state &&
+    profile.category &&
+    profile.businessType &&
+    profile.projectCost
+  );
+
   return (
-    <div className="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full space-y-8">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-100 border border-neutral-200 text-xs font-semibold text-neutral-800 mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Mode B • Conversational Input</span>
-        </div>
-        <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">
-          AI Scheme Assistant
-        </h1>
-        <p className="text-sm text-neutral-500 max-w-md mx-auto">
-          Describe yourself and your business venture in plain text, and we'll extract your parameters automatically.
-        </p>
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-start w-full overflow-hidden">
+      {/* Soft atmospheric gradient glow behind hero */}
+      <div className="absolute inset-x-0 top-0 -z-10 flex justify-center pointer-events-none overflow-hidden">
+        <div className="w-[1100px] h-[520px] bg-gradient-to-b from-blue-100/60 via-indigo-50/40 to-transparent blur-3xl opacity-80 rounded-full -translate-y-24" />
       </div>
 
-      <div className="bg-white shadow-sm border border-neutral-200 rounded-3xl p-6 sm:p-8 space-y-4">
-        <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-500">
-          Describe Yourself
-        </label>
-        <textarea
-          rows={5}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          className="w-full rounded-2xl border border-neutral-300 p-4 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black text-neutral-900 placeholder:text-neutral-400 bg-neutral-50/50"
-          placeholder="e.g. I am a 28 year old woman from UP. I want to start a tailoring business requiring a loan of 4 lakh. I belong to SC category."
-        />
-        
-        {error && <p className="text-xs text-neutral-800 font-semibold">{error}</p>}
-        
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
-          <span className="text-xs text-neutral-400">Supports state abbreviations (UP, HR, DL, etc.)</span>
-          <button
-            onClick={handleAnalyze}
-            disabled={isAnalyzing || !inputText.trim()}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-black text-white rounded-full font-medium text-xs hover:bg-neutral-800 transition-all disabled:opacity-50"
-          >
-            {isAnalyzing && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            <span>{isAnalyzing ? 'Analyzing...' : 'Analyze My Profile'}</span>
-          </button>
-        </div>
-      </div>
-
-      {extractedProfile && (
-        <div className="bg-white shadow-sm border border-neutral-200 rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-3">
-          <div className="p-6 bg-neutral-50 border-b border-neutral-200">
-            <h2 className="text-base font-bold text-neutral-900">Extracted Profile Parameters</h2>
-            <p className="text-xs text-neutral-500">Review the parameters detected from your text before evaluating schemes.</p>
+      <div className="flex-1 max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 w-full space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/80 border border-blue-100 text-xs font-semibold text-blue-600">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>Conversational Scheme Discovery</span>
           </div>
-          <div className="p-6 sm:p-8 space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-100">
-                <span className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Age</span>
-                <span className="font-bold text-neutral-900">{extractedProfile.age ? `${extractedProfile.age} yrs` : 'Not detected'}</span>
-              </div>
-              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-100">
-                <span className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Gender</span>
-                <span className="font-bold text-neutral-900">{extractedProfile.gender || 'Not detected'}</span>
-              </div>
-              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-100">
-                <span className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Category</span>
-                <span className="font-bold text-neutral-900">{extractedProfile.category || 'Not detected'}</span>
-              </div>
-              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-100">
-                <span className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">State</span>
-                <span className="font-bold text-neutral-900">{extractedProfile.state || 'Not detected'}</span>
-              </div>
-              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-100">
-                <span className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Sector</span>
-                <span className="font-bold text-neutral-900">{extractedProfile.businessType || 'Not detected'}</span>
-              </div>
-              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-100">
-                <span className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Project Cost</span>
-                <span className="font-bold text-neutral-900">
-                  {extractedProfile.projectCost ? `₹${extractedProfile.projectCost.toLocaleString()}` : 'Not detected'}
-                </span>
-              </div>
-            </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
+            AI Scheme Assistant
+          </h1>
+          <p className="text-sm text-neutral-500 max-w-lg mx-auto">
+            Answer a few quick questions about your age, location (state & city), category, and venture.
+          </p>
+        </div>
 
+        {/* Chat Window */}
+        <div className="bg-white shadow-xl shadow-neutral-100/60 border border-neutral-200/90 rounded-3xl overflow-hidden flex flex-col h-[520px]">
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-neutral-50/40">
+            {messages.map((msg) => {
+              const isBot = msg.sender === 'assistant';
+              return (
+                <div key={msg.id} className={`flex items-start gap-3 ${isBot ? 'justify-start' : 'justify-end'}`}>
+                  {isBot && (
+                    <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Bot className="w-4 h-4" />
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-md px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
+                      isBot
+                        ? 'bg-white border border-neutral-200 text-neutral-800 shadow-xs'
+                        : 'bg-black text-white font-medium'
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                  {!isBot && (
+                    <div className="w-8 h-8 rounded-full bg-neutral-200 text-neutral-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <User className="w-4 h-4" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick reply shortcuts */}
+          <div className="px-4 py-2 border-t border-neutral-100 bg-white flex flex-wrap gap-1.5 text-xs text-neutral-600">
+            <span className="text-neutral-400 self-center mr-1">Suggested:</span>
+            {['28, Female', 'Lucknow, UP', 'OBC Category', 'Food Processing', '₹5 Lakh loan'].map((sug) => (
+              <button
+                key={sug}
+                type="button"
+                onClick={() => handleSend(sug)}
+                className="px-3 py-1 rounded-full border border-neutral-200 hover:border-black bg-neutral-50 hover:bg-neutral-100 transition-all"
+              >
+                {sug}
+              </button>
+            ))}
+          </div>
+
+          {/* Input Box */}
+          <div className="p-4 border-t border-neutral-200 bg-white flex items-center gap-2">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your answer (e.g. 28 Female, Lucknow UP, 5 Lakh)..."
+              className="flex-1 px-4 py-3 rounded-full border border-neutral-300 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black bg-white"
+            />
             <button
-              onClick={handleMatch}
-              disabled={isMatching}
-              className="w-full flex justify-center items-center gap-2 px-6 py-3.5 bg-black text-white rounded-full font-semibold text-sm hover:bg-neutral-800 transition-all disabled:opacity-60 shadow-sm"
+              type="button"
+              onClick={() => handleSend()}
+              disabled={!inputText.trim()}
+              className="px-5 py-3 rounded-full bg-black text-white hover:bg-neutral-800 disabled:opacity-50 transition-all flex items-center justify-center"
             >
-              {isMatching ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Evaluating Schemes...</span>
-                </>
-              ) : (
-                <>
-                  <span>Find Matching Schemes</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
+              <Send className="w-4 h-4" />
             </button>
           </div>
         </div>
-      )}
 
-      <div>
+        {/* Live Detected Profile Preview & Submit */}
+        <div className="bg-white rounded-3xl border border-neutral-200/90 p-6 shadow-sm space-y-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-sm font-bold text-neutral-900">Live Detected Profile</h3>
+              <p className="text-xs text-neutral-400">Updates as you chat with the assistant.</p>
+            </div>
+            {isProfileComplete && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-black text-white">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Ready to Match</span>
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+              <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">Age & Gender</span>
+              <span className="font-bold text-neutral-900">
+                {profile.age ? `${profile.age} yrs` : '—'} {profile.gender ? `(${profile.gender})` : ''}
+              </span>
+            </div>
+
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+              <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">State</span>
+              <span className="font-bold text-neutral-900">{profile.state || '—'}</span>
+            </div>
+
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+              <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">City / District</span>
+              <span className="font-bold text-neutral-900">{profile.city || '—'}</span>
+            </div>
+
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+              <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">Category</span>
+              <span className="font-bold text-neutral-900">{profile.category || '—'}</span>
+            </div>
+
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+              <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">Business Sector</span>
+              <span className="font-bold text-neutral-900">{profile.businessType || '—'}</span>
+            </div>
+
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+              <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">Project Cost</span>
+              <span className="font-bold text-neutral-900">
+                {profile.projectCost ? formatCurrency(profile.projectCost) : '—'}
+              </span>
+            </div>
+
+            <div className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100 col-span-2 flex items-center justify-between">
+              <div>
+                <span className="block text-neutral-400 uppercase font-semibold text-[10px] mb-0.5">Or use structured form:</span>
+                <Link href="/scheme-finder" className="text-xs font-semibold text-neutral-800 hover:underline">
+                  Go to 3-Step Scheme Finder →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleMatchSchemes}
+            disabled={!isProfileComplete || isMatching}
+            className="w-full py-3.5 px-6 rounded-full bg-black text-white font-semibold text-sm hover:bg-neutral-800 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
+            {isMatching ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Evaluating 100% Matches...</span>
+              </>
+            ) : (
+              <>
+                <span>Find 100% Matching Schemes</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </div>
+
         <Disclaimer />
       </div>
     </div>
