@@ -32,10 +32,6 @@ export default function SchemeCard({ scheme, matchResult, userProfile }: SchemeC
           <MatchBadge status={matchResult.status} />
           <h3 className="text-xl font-bold text-neutral-900 mt-3">{scheme.name}</h3>
         </div>
-        {/* Single, clear percentage match indicator */}
-        <div className="bg-black text-white text-base font-bold px-4 py-1.5 rounded-full text-center flex-shrink-0">
-          {matchResult.score}% Match
-        </div>
       </div>
       
       <p className="text-neutral-600 mb-6 text-sm line-clamp-2 leading-relaxed">{scheme.description}</p>

@@ -96,7 +96,7 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
               </div>
               {matchResult && (
                 <div className="mt-1 flex-shrink-0">
-                  <MatchBadge status={matchResult.status} score={matchResult.score} showScore={true} />
+                  <MatchBadge status={matchResult.status} />
                 </div>
               )}
             </div>

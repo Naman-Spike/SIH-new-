@@ -3,11 +3,9 @@ import type { EligibilityStatus } from '@/types';
 
 interface MatchBadgeProps {
   status: EligibilityStatus;
-  score?: number;
-  showScore?: boolean;
 }
 
-export default function MatchBadge({ status, score, showScore = false }: MatchBadgeProps) {
+export default function MatchBadge({ status }: MatchBadgeProps) {
   const isEligible = status === 'Eligible';
   const isPotentiallyEligible = status === 'Potentially Eligible';
 
@@ -22,10 +20,7 @@ export default function MatchBadge({ status, score, showScore = false }: MatchBa
   return (
     <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold tracking-wide ${badgeStyle}`}>
       <Icon className="h-3.5 w-3.5" />
-      <span>
-        {status}
-        {showScore && score !== undefined ? ` • ${score}%` : ''}
-      </span>
+      <span>{status}</span>
     </div>
   );
 }
