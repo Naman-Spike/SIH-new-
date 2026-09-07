@@ -14,9 +14,45 @@ import {
 } from '@/types';
 import type { UserProfile } from '@/types';
 import { Loader2, ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
+
+const GENDER_LABELS: Record<string, { en: string; hi: string }> = {
+  'Male': { en: 'Male', hi: 'पुरुष (Male)' },
+  'Female': { en: 'Female', hi: 'महिला (Female)' },
+  'Other': { en: 'Other', hi: 'अन्य (Other)' },
+  'Prefer not to say': { en: 'Prefer not to say', hi: 'बताना नहीं चाहते' }
+};
+
+const CATEGORY_LABELS: Record<string, { en: string; hi: string }> = {
+  'General': { en: 'General', hi: 'सामान्य (General)' },
+  'OBC': { en: 'OBC', hi: 'अन्य पिछड़ा वर्ग (OBC)' },
+  'SC': { en: 'SC', hi: 'अनुसूचित जाति (SC)' },
+  'ST': { en: 'ST', hi: 'अनुसूचित जनजाति (ST)' },
+  'Minority': { en: 'Minority', hi: 'अल्पसंख्यक (Minority)' },
+  'Other': { en: 'Other', hi: 'अन्य (Other)' }
+};
+
+const STATUS_LABELS: Record<string, { en: string; hi: string }> = {
+  'Starting a new business': { en: 'Starting a new business', hi: 'नया व्यवसाय शुरू करना (New Business)' },
+  'Existing business': { en: 'Existing business', hi: 'मौजूदा व्यवसाय विस्तार (Existing Business)' },
+  'Self-employed': { en: 'Self-employed', hi: 'स्व-रोज़गार (Self-employed)' },
+  'Unemployed': { en: 'Unemployed', hi: 'बेरोज़गार / आकांक्षी उद्यमी' }
+};
+
+const SECTOR_LABELS: Record<string, { en: string; hi: string }> = {
+  'Manufacturing': { en: 'Manufacturing', hi: 'विनिर्माण / उत्पादन (Manufacturing)' },
+  'Service': { en: 'Service', hi: 'सेवा क्षेत्र (Service)' },
+  'Trading': { en: 'Trading', hi: 'व्यापार / दुकान / खुदरा (Trading)' },
+  'Agriculture': { en: 'Agriculture', hi: 'कृषि / डेयरी / संबद्ध (Agriculture)' },
+  'Food': { en: 'Food', hi: 'खाद्य प्रसंस्करण / रेस्टोरेंट / बेकरी (Food)' },
+  'Tailoring/Textiles': { en: 'Tailoring/Textiles', hi: 'सिलाई / परिधान / वस्त्र (Tailoring/Textiles)' },
+  'Handicrafts': { en: 'Handicrafts', hi: 'हस्तशिल्प / कुटीर उद्योग (Handicrafts)' },
+  'Other': { en: 'Other', hi: 'अन्य क्षेत्र (Other)' }
+};
 
 export default function ProfileForm() {
   const router = useRouter();
+  const { t, isHindi } = useLanguage();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -69,35 +105,34 @@ export default function ProfileForm() {
   };
 
   const validateStep1 = () => {
-    if (!formData.age || formData.age < 18 || formData.age > 100) return 'Please enter a valid age between 18 and 100.';
-    if (!formData.gender) return 'Please select a gender.';
+    if (!formData.age || formData.age < 18 || formData.age > 100) return t('errAge');
+    if (!formData.gender) return t('errGender');
     
     // Ensure state is normalized
     const normalizedState = normalizeStateName(formData.state || stateInput);
-    if (!normalizedState) return 'Please enter or select a state.';
+    if (!normalizedState) return t('errState');
     if (!INDIAN_STATES.includes(normalizedState)) {
-      return `State "${formData.state}" not recognized. Please pick a valid Indian State/UT (e.g. UP, HR, Delhi, Maharashtra).`;
+      return t('errStateUnrecognized', formData.state || stateInput);
     }
     // Update normalized state in form
     setFormData((prev) => ({ ...prev, state: normalizedState }));
 
-    if (!formData.city || !formData.city.trim()) return 'Please enter your city or district.';
-    
-    if (!formData.category) return 'Please select a social category.';
+    if (!formData.city || !formData.city.trim()) return t('errCity');
+    if (!formData.category) return t('errCategory');
     return '';
   };
 
   const validateStep2 = () => {
-    if (!formData.businessStatus) return 'Please select your employment/business status.';
-    if (!formData.businessType) return 'Please select a business type.';
-    if (formData.existingBusiness === undefined) return 'Please indicate if you have an existing business.';
-    if (formData.existingLoan === undefined) return 'Please indicate if you have an existing loan.';
+    if (!formData.businessStatus) return t('errStatus');
+    if (!formData.businessType) return t('errSector');
+    if (formData.existingBusiness === undefined) return t('errExistingBiz');
+    if (formData.existingLoan === undefined) return t('errExistingLoan');
     return '';
   };
 
   const validateStep3 = () => {
-    if (!formData.annualIncome) return 'Please select your annual family income.';
-    if (!formData.projectCost || formData.projectCost <= 0) return 'Please enter a valid project/loan requirement.';
+    if (!formData.annualIncome) return t('errIncome');
+    if (!formData.projectCost || formData.projectCost <= 0) return t('errProjectCost');
     return '';
   };
 
@@ -165,9 +200,9 @@ export default function ProfileForm() {
           ></div>
           
           {[
-            { num: 1, label: 'Personal' },
-            { num: 2, label: 'Business' },
-            { num: 3, label: 'Financial' },
+            { num: 1, label: t('stepPersonal') },
+            { num: 2, label: t('stepBusiness') },
+            { num: 3, label: t('stepFinancial') },
           ].map((item) => {
             const isCompleted = step > item.num;
             const isCurrent = step === item.num;
@@ -208,12 +243,12 @@ export default function ProfileForm() {
         {step === 1 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
             <div>
-              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">Personal Details</h3>
-              <p className="text-sm text-neutral-500 mt-1">Provide your demographic details for accurate scheme eligibility.</p>
+              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">{t('step1Heading')}</h3>
+              <p className="text-sm text-neutral-500 mt-1">{t('step1Subheading')}</p>
             </div>
             
             <div>
-              <label className="label-text">Age</label>
+              <label className="label-text">{t('ageLabel')}</label>
               <input
                 type="number"
                 name="age"
@@ -222,27 +257,31 @@ export default function ProfileForm() {
                 min="18"
                 max="100"
                 className="input-field"
-                placeholder="e.g. 28"
+                placeholder={t('agePlaceholder')}
               />
             </div>
             
             <div>
-              <label className="label-text">Gender</label>
+              <label className="label-text">{t('genderLabel')}</label>
               <select
                 name="gender"
                 value={formData.gender || ''}
                 onChange={handleChange}
                 className="select-field"
               >
-                <option value="">Select Gender</option>
-                {GENDERS.map((g) => <option key={g} value={g}>{g}</option>)}
+                <option value="">{t('genderSelect')}</option>
+                {GENDERS.map((g) => (
+                  <option key={g} value={g}>
+                    {isHindi && GENDER_LABELS[g] ? GENDER_LABELS[g].hi : g}
+                  </option>
+                ))}
               </select>
             </div>
             
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="label-text mb-0">State / Union Territory</label>
-                <span className="text-xs text-neutral-400 font-medium">Shortcuts: UP, HR, DL, MP, RJ, MH, etc.</span>
+                <label className="label-text mb-0">{t('stateLabel')}</label>
+                <span className="text-xs text-neutral-400 font-medium">{t('stateShortcuts')}</span>
               </div>
               
               <div className="relative">
@@ -253,7 +292,7 @@ export default function ProfileForm() {
                   onChange={handleStateChange}
                   onBlur={handleStateBlur}
                   className="input-field"
-                  placeholder="Type state name or code (e.g. UP, HR, Maharashtra)"
+                  placeholder={t('statePlaceholder')}
                   autoComplete="off"
                 />
                 <datalist id="indian-states-list">
@@ -265,7 +304,7 @@ export default function ProfileForm() {
 
               {/* Quick shortcut pills */}
               <div className="flex flex-wrap gap-1.5 mt-2.5">
-                <span className="text-xs text-neutral-400 self-center mr-1">Quick pick:</span>
+                <span className="text-xs text-neutral-400 self-center mr-1">{t('quickPick')}</span>
                 {['UP', 'HR', 'Delhi', 'MP', 'Rajasthan', 'Maharashtra', 'Bihar', 'Gujarat'].map((st) => (
                   <button
                     key={st}
@@ -284,27 +323,31 @@ export default function ProfileForm() {
             </div>
 
             <div>
-              <label className="label-text">City / District</label>
+              <label className="label-text">{t('cityLabel')}</label>
               <input
                 type="text"
                 name="city"
                 value={formData.city || ''}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="e.g. Lucknow, Gurugram, Jaipur, Pune, Mumbai"
+                placeholder={t('cityPlaceholder')}
               />
             </div>
             
             <div>
-              <label className="label-text">Social Category</label>
+              <label className="label-text">{t('categoryLabel')}</label>
               <select
                 name="category"
                 value={formData.category || ''}
                 onChange={handleChange}
                 className="select-field"
               >
-                <option value="">Select Category</option>
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                <option value="">{t('categorySelect')}</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {isHindi && CATEGORY_LABELS[c] ? CATEGORY_LABELS[c].hi : c}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -314,38 +357,46 @@ export default function ProfileForm() {
         {step === 2 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
             <div>
-              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">Business Details</h3>
-              <p className="text-sm text-neutral-500 mt-1">Tell us about your venture, industry, and current operations.</p>
+              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">{t('step2Heading')}</h3>
+              <p className="text-sm text-neutral-500 mt-1">{t('step2Subheading')}</p>
             </div>
             
             <div>
-              <label className="label-text">Employment / Business Status</label>
+              <label className="label-text">{t('statusLabel')}</label>
               <select
                 name="businessStatus"
                 value={formData.businessStatus || ''}
                 onChange={handleChange}
                 className="select-field"
               >
-                <option value="">Select Status</option>
-                {BUSINESS_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                <option value="">{t('statusSelect')}</option>
+                {BUSINESS_STATUSES.map((s) => (
+                  <option key={s} value={s}>
+                    {isHindi && STATUS_LABELS[s] ? STATUS_LABELS[s].hi : s}
+                  </option>
+                ))}
               </select>
             </div>
             
             <div>
-              <label className="label-text">Business Sector / Industry</label>
+              <label className="label-text">{t('sectorLabel')}</label>
               <select
                 name="businessType"
                 value={formData.businessType || ''}
                 onChange={handleChange}
                 className="select-field"
               >
-                <option value="">Select Sector</option>
-                {BUSINESS_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                <option value="">{t('sectorSelect')}</option>
+                {BUSINESS_TYPES.map((tItem) => (
+                  <option key={tItem} value={tItem}>
+                    {isHindi && SECTOR_LABELS[tItem] ? SECTOR_LABELS[tItem].hi : tItem}
+                  </option>
+                ))}
               </select>
             </div>
             
             <div className="space-y-2">
-              <label className="label-text">Do you have an existing business?</label>
+              <label className="label-text">{t('existingBizLabel')}</label>
               <div className="grid grid-cols-2 gap-3">
                 <label className={`flex items-center justify-center gap-2 p-3.5 rounded-2xl border cursor-pointer transition-all ${
                   formData.existingBusiness === true 
@@ -360,7 +411,7 @@ export default function ProfileForm() {
                     onChange={handleChange} 
                     className="sr-only" 
                   />
-                  <span>Yes, Existing</span>
+                  <span>{t('existingBizYes')}</span>
                 </label>
                 
                 <label className={`flex items-center justify-center gap-2 p-3.5 rounded-2xl border cursor-pointer transition-all ${
@@ -376,13 +427,13 @@ export default function ProfileForm() {
                     onChange={handleChange} 
                     className="sr-only" 
                   />
-                  <span>No, New Startup</span>
+                  <span>{t('existingBizNo')}</span>
                 </label>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="label-text">Do you currently have an outstanding business loan?</label>
+              <label className="label-text">{t('existingLoanLabel')}</label>
               <div className="grid grid-cols-2 gap-3">
                 <label className={`flex items-center justify-center gap-2 p-3.5 rounded-2xl border cursor-pointer transition-all ${
                   formData.existingLoan === true 
@@ -397,7 +448,7 @@ export default function ProfileForm() {
                     onChange={handleChange} 
                     className="sr-only" 
                   />
-                  <span>Yes, Active Loan</span>
+                  <span>{t('existingLoanYes')}</span>
                 </label>
                 
                 <label className={`flex items-center justify-center gap-2 p-3.5 rounded-2xl border cursor-pointer transition-all ${
@@ -413,7 +464,7 @@ export default function ProfileForm() {
                     onChange={handleChange} 
                     className="sr-only" 
                   />
-                  <span>No Active Loans</span>
+                  <span>{t('existingLoanNo')}</span>
                 </label>
               </div>
             </div>
@@ -424,26 +475,26 @@ export default function ProfileForm() {
         {step === 3 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
             <div>
-              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">Financial Requirements</h3>
-              <p className="text-sm text-neutral-500 mt-1">Specify your family income range and the required project funding.</p>
+              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">{t('step3Heading')}</h3>
+              <p className="text-sm text-neutral-500 mt-1">{t('step3Subheading')}</p>
             </div>
             
             <div>
-              <label className="label-text">Annual Family Income</label>
+              <label className="label-text">{t('incomeLabel')}</label>
               <select
                 name="annualIncome"
                 value={formData.annualIncome || ''}
                 onChange={handleChange}
                 className="select-field"
               >
-                <option value="">Select Income Range</option>
+                <option value="">{t('incomeSelect')}</option>
                 {INCOME_RANGES.map((i) => <option key={i} value={i}>{i}</option>)}
               </select>
             </div>
             
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="label-text mb-0">Project Cost / Loan Requirement (₹)</label>
+                <label className="label-text mb-0">{t('projectCostLabel')}</label>
                 {formData.projectCost && Number(formData.projectCost) > 0 ? (
                   <span className="text-xs font-bold text-neutral-900 bg-neutral-100 px-2.5 py-0.5 rounded-full border border-neutral-300">
                     {formatCurrency(Number(formData.projectCost))}
@@ -458,15 +509,15 @@ export default function ProfileForm() {
                 min="0"
                 step="any"
                 className="input-field"
-                placeholder="e.g. 300000, 500000, 1000000"
+                placeholder={t('projectCostPlaceholder')}
               />
               <span className="text-xs text-neutral-400 mt-1.5 block">
-                Enter any exact project / loan amount in INR.
+                {t('projectCostHelp')}
               </span>
 
               {/* Quick funding shortcuts */}
               <div className="flex flex-wrap gap-1.5 mt-2.5">
-                <span className="text-xs text-neutral-400 self-center mr-1">Quick pick:</span>
+                <span className="text-xs text-neutral-400 self-center mr-1">{t('quickPick')}</span>
                 {[
                   { label: '₹1 Lakh', val: 100000 },
                   { label: '₹3 Lakh', val: 300000 },
@@ -502,7 +553,7 @@ export default function ProfileForm() {
               className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-300 rounded-full text-neutral-800 font-medium text-sm hover:bg-neutral-100 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back</span>
+              <span>{t('btnBack')}</span>
             </button>
           ) : (
             <div />
@@ -514,7 +565,7 @@ export default function ProfileForm() {
               onClick={nextStep}
               className="inline-flex items-center gap-2 px-8 py-3 bg-black text-white rounded-full font-medium text-sm hover:bg-neutral-800 transition-all shadow-sm"
             >
-              <span>Continue</span>
+              <span>{t('btnContinue')}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
@@ -524,7 +575,7 @@ export default function ProfileForm() {
               className="inline-flex items-center gap-2 px-8 py-3 bg-black text-white rounded-full font-medium text-sm hover:bg-neutral-800 transition-all disabled:opacity-60 shadow-sm"
             >
               {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-              <span>{isLoading ? 'Matching Schemes...' : 'Find My Schemes'}</span>
+              <span>{isLoading ? t('btnMatchingSchemes') : t('btnFindSchemes')}</span>
               {!isLoading && <Sparkles className="w-4 h-4" />}
             </button>
           )}

@@ -6,8 +6,10 @@ import SchemeCard from '@/components/SchemeCard';
 import Disclaimer from '@/components/Disclaimer';
 import type { MatchResult, UserProfile, Scheme } from '@/types';
 import { Sparkles, ArrowLeft, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ResultsPage() {
+  const { t, isHindi } = useLanguage();
   const [matchResults, setMatchResults] = useState<MatchResult[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [schemes, setSchemes] = useState<Record<string, Scheme>>({});
@@ -54,7 +56,9 @@ export default function ResultsPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-20 px-4 text-center">
         <div className="w-10 h-10 border-4 border-neutral-200 border-t-black rounded-full animate-spin mb-4" />
-        <p className="text-sm font-medium text-neutral-500">Evaluating 100% scheme matches...</p>
+        <p className="text-sm font-medium text-neutral-500">
+          {isHindi ? '100% उपयुक्त सरकारी योजनाओं का मिलान किया जा रहा है...' : 'Evaluating 100% scheme matches...'}
+        </p>
       </div>
     );
   }
@@ -65,15 +69,15 @@ export default function ResultsPage() {
         <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
           <Sparkles className="w-5 h-5 text-neutral-800" />
         </div>
-        <h2 className="text-2xl font-bold text-neutral-900 mb-2">No Profile Found</h2>
+        <h2 className="text-2xl font-bold text-neutral-900 mb-2">{t('noProfileTitle')}</h2>
         <p className="text-sm text-neutral-500 mb-8 leading-relaxed">
-          Please complete the profile questionnaire so we can evaluate your scheme eligibility.
+          {t('noProfileSubtitle')}
         </p>
         <Link 
           href="/scheme-finder" 
           className="inline-flex items-center gap-2 px-8 py-3.5 bg-black text-white rounded-full font-medium text-sm hover:bg-neutral-800 transition-all shadow-sm"
         >
-          <span>Go to Scheme Finder</span>
+          <span>{t('btnGoToFinder')}</span>
         </Link>
       </div>
     );
@@ -87,10 +91,10 @@ export default function ResultsPage() {
       {/* Header section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-neutral-200 pb-6">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Match Results</span>
-          <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight mt-1">Your Recommended Schemes</h1>
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">{t('resultsBadge')}</span>
+          <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight mt-1">{t('resultsHeading')}</h1>
           <p className="text-sm text-neutral-500 mt-1">
-            Found {displayableResults.length} {displayableResults.length === 1 ? 'scheme' : 'schemes'} that 100% match your profile for <span className="font-semibold text-neutral-800">{userProfile.city ? `${userProfile.city}, ` : ''}{userProfile.state}</span> ({userProfile.category} category).
+            {t('resultsCountPrefix')}{displayableResults.length} {t('resultsCountSuffix', displayableResults.length, userProfile.city, userProfile.state, userProfile.category)}
           </p>
         </div>
         <Link 
@@ -98,7 +102,7 @@ export default function ResultsPage() {
           className="inline-flex items-center gap-2 px-5 py-2.5 border border-neutral-300 bg-white text-neutral-800 rounded-full font-medium text-xs hover:bg-neutral-100 transition-all shadow-sm whitespace-nowrap"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          <span>Edit Profile</span>
+          <span>{t('btnEditProfile')}</span>
         </Link>
       </div>
 
@@ -108,7 +112,11 @@ export default function ResultsPage() {
           <div className="flex items-center gap-2">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold tracking-wide bg-black text-white border border-black shadow-sm">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>100% Matching Schemes ({displayableResults.length})</span>
+              <span>
+                {isHindi 
+                  ? `100% उपयुक्त योजनाएं (${displayableResults.length})` 
+                  : `100% Matching Schemes (${displayableResults.length})`}
+              </span>
             </div>
           </div>
 
@@ -128,17 +136,16 @@ export default function ResultsPage() {
         </>
       ) : (
         <div className="bg-white rounded-3xl p-12 text-center border border-neutral-200 max-w-lg mx-auto shadow-sm">
-          <h3 className="text-xl font-bold text-neutral-900 mb-2">No 100% Matching Schemes Found</h3>
+          <h3 className="text-xl font-bold text-neutral-900 mb-2">{t('noSchemesTitle')}</h3>
           <p className="text-sm text-neutral-500 mb-8 leading-relaxed">
-            Based on your demographic, business sector, or loan criteria, none of the schemes currently match 100% of your parameters. 
-            Try updating your profile details or project requirements.
+            {t('noSchemesSubtitle')}
           </p>
           <Link 
             href="/scheme-finder" 
             className="inline-flex items-center gap-2 px-8 py-3.5 bg-black text-white rounded-full font-medium text-sm hover:bg-neutral-800 transition-all shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Update Profile</span>
+            <span>{t('btnBack')}</span>
           </Link>
         </div>
       )}

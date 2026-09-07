@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, Bot, Sparkles } from 'lucide-react';
 import type { UserProfile, MatchResult } from '@/types';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ChatBoxProps {
   schemeId: string;
@@ -16,18 +17,29 @@ interface Message {
   content: string;
 }
 
-const SUGGESTED_QUESTIONS = [
-  'Why am I eligible?',
-  'What documents do I need?',
-  'How do I apply?',
-  'What are the benefits?'
-];
-
 export default function ChatBox({ schemeId, schemeName, userProfile, matchResult }: ChatBoxProps) {
+  const { language, isHindi, t } = useLanguage();
+
+  const suggestedQuestions = isHindi ? [
+    'आवश्यक दस्तावेज़ क्या हैं?',
+    'मैं कैसे आवेदन करूँ?',
+    'इसके क्या लाभ हैं?',
+    'अधिकतम ऋण राशि कितनी है?'
+  ] : [
+    'What documents do I need?',
+    'How do I apply?',
+    'What are the benefits?',
+    'Why am I eligible?'
+  ];
+
+  const initialGreeting = isHindi
+    ? `नमस्ते! मैं ${schemeName} के बारे में आपके सभी प्रश्नों का उत्तर दे सकता हूँ। मुझसे आवश्यक दस्तावेज़, ऋण राशि, ब्याज दर, सब्सिडी या आवेदन प्रक्रिया के बारे में पूछें।`
+    : `Hello! I can answer any questions about ${schemeName}. Ask me about your eligibility, required documents, benefits, loan amounts, or application steps.`;
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hello! I can answer any questions about ${schemeName}. Ask me about your eligibility, required documents, benefits, loan amounts, or application steps.`
+      content: initialGreeting
     }
   ]);
   const [input, setInput] = useState('');
@@ -59,6 +71,7 @@ export default function ChatBox({ schemeId, schemeName, userProfile, matchResult
           schemeId,
           userProfile,
           matchResult,
+          language,
         }),
       });
 
@@ -68,7 +81,15 @@ export default function ChatBox({ schemeId, schemeName, userProfile, matchResult
       
       setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
     } catch (error) {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again later.' }]);
+      setMessages((prev) => [
+        ...prev, 
+        { 
+          role: 'assistant', 
+          content: isHindi 
+            ? 'क्षमा करें, उत्तर प्राप्त करने में त्रुटि हुई। कृपया पुनः प्रयास करें।' 
+            : 'Sorry, I encountered an error. Please try again later.' 
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +105,9 @@ export default function ChatBox({ schemeId, schemeName, userProfile, matchResult
           </div>
           <div>
             <h4 className="text-sm font-semibold tracking-tight">{schemeName} Assistant</h4>
-            <span className="text-xs text-neutral-400">Contextual Scheme Assistant</span>
+            <span className="text-xs text-neutral-400">
+              {isHindi ? 'योजना संवादात्मक सहायक' : 'Contextual Scheme Assistant'}
+            </span>
           </div>
         </div>
         <span className="text-xs bg-white/20 text-white px-2.5 py-0.5 rounded-full font-medium flex items-center gap-1">
@@ -112,7 +135,7 @@ export default function ChatBox({ schemeId, schemeName, userProfile, matchResult
           <div className="flex justify-start">
             <div className="bg-white border border-neutral-200 text-neutral-600 rounded-2xl rounded-tl-sm px-4 py-2.5 flex items-center gap-2 text-sm shadow-sm">
               <Loader2 className="w-4 h-4 animate-spin text-black" />
-              <span>Analyzing scheme details...</span>
+              <span>{isHindi ? 'योजना विवरण विश्लेषित किए जा रहे हैं...' : 'Analyzing scheme details...'}</span>
             </div>
           </div>
         )}
@@ -123,7 +146,7 @@ export default function ChatBox({ schemeId, schemeName, userProfile, matchResult
       <div className="p-4 bg-white border-t border-neutral-200">
         {messages.length < 3 && !isLoading && (
           <div className="flex flex-wrap gap-1.5 mb-3">
-            {SUGGESTED_QUESTIONS.map((q) => (
+            {suggestedQuestions.map((q) => (
               <button
                 key={q}
                 onClick={() => handleSend(q)}
@@ -141,7 +164,7 @@ export default function ChatBox({ schemeId, schemeName, userProfile, matchResult
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleSend(input)}
-            placeholder="Ask a question about this scheme..."
+            placeholder={isHindi ? 'योजना के बारे में प्रश्न पूछें (उदा. दस्तावेज, ऋण)...' : 'Ask a question about this scheme...'}
             disabled={isLoading}
             className="flex-1 rounded-full border border-neutral-300 px-5 py-2.5 text-sm text-neutral-900 focus:outline-none focus:border-black focus:ring-1 focus:ring-black disabled:bg-neutral-100 pr-12 transition-all"
           />

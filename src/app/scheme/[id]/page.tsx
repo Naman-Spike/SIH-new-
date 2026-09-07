@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, ExternalLink, Sparkles, X, MessageSquare } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Sparkles, X, MessageSquare, FileText, CheckCircle2 } from 'lucide-react';
 import type { Scheme, MatchResult, UserProfile } from '@/types';
 import MatchBadge from '@/components/MatchBadge';
 import EligibilityBreakdown from '@/components/EligibilityBreakdown';
 import ChatBox from '@/components/ChatBox';
 import Disclaimer from '@/components/Disclaimer';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function SchemeDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t, isHindi } = useLanguage();
   const [scheme, setScheme] = useState<Scheme | null>(null);
   const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -55,7 +57,9 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
     return (
       <div className="flex-1 flex flex-col justify-center items-center py-24 space-y-4">
         <div className="animate-spin rounded-full h-10 w-10 border-2 border-neutral-300 border-t-black"></div>
-        <p className="text-sm font-medium text-neutral-500">Loading scheme details...</p>
+        <p className="text-sm font-medium text-neutral-500">
+          {isHindi ? 'योजना का विवरण लोड हो रहा है...' : 'Loading scheme details...'}
+        </p>
       </div>
     );
   }
@@ -63,13 +67,17 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
   if (!scheme) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-20 px-4 text-center max-w-md mx-auto">
-        <h2 className="text-2xl font-bold text-neutral-900 mb-2">Scheme Not Found</h2>
-        <p className="text-sm text-neutral-500 mb-8">The requested scheme could not be found or has been removed.</p>
+        <h2 className="text-2xl font-bold text-neutral-900 mb-2">
+          {isHindi ? 'योजना नहीं मिली' : 'Scheme Not Found'}
+        </h2>
+        <p className="text-sm text-neutral-500 mb-8">
+          {isHindi ? 'अनुरोधित योजना नहीं मिली या हटा दी गई है।' : 'The requested scheme could not be found or has been removed.'}
+        </p>
         <button 
           onClick={() => router.back()} 
           className="px-8 py-3.5 bg-black text-white rounded-full font-medium text-sm hover:bg-neutral-800 transition-all shadow-sm"
         >
-          Go Back
+          {t('btnBack')}
         </button>
       </div>
     );
@@ -83,7 +91,7 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-black mb-6 transition-colors px-3 py-1.5 rounded-full hover:bg-neutral-100"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Results</span>
+          <span>{t('btnBackToResults')}</span>
         </button>
 
         <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden mb-10">
@@ -106,15 +114,15 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
           {/* Key Financial Terms */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-b border-neutral-200 divide-y md:divide-y-0 md:divide-x divide-neutral-200 bg-neutral-50">
             <div className="p-6">
-              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Max Loan Amount</h3>
+              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">{t('maxLoanLabel')}</h3>
               <p className="text-xl font-bold text-neutral-900">{scheme.maximumLoanAmount ? `₹${scheme.maximumLoanAmount.toLocaleString()}` : 'N/A'}</p>
             </div>
             <div className="p-6">
-              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Interest Rate</h3>
+              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">{t('interestRateLabel')}</h3>
               <p className="text-xl font-bold text-neutral-900">{scheme.interestRate || 'N/A'}</p>
             </div>
             <div className="p-6">
-              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Repayment Tenure</h3>
+              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">{t('tenureLabel')}</h3>
               <p className="text-xl font-bold text-neutral-900">{scheme.repaymentTenure || 'N/A'}</p>
             </div>
           </div>
@@ -123,8 +131,8 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
           <div className="p-6 sm:p-10 space-y-10">
             {matchResult && (
               <section className="bg-neutral-50 border border-neutral-200 rounded-3xl p-6 sm:p-8">
-                <h2 className="text-lg font-bold text-neutral-900 mb-2">Your Eligibility Assessment</h2>
-                <p className="text-xs text-neutral-500 mb-4">Detailed condition checks based on your submitted profile.</p>
+                <h2 className="text-lg font-bold text-neutral-900 mb-2">{t('secAssessment')}</h2>
+                <p className="text-xs text-neutral-500 mb-4">{t('secAssessmentSub')}</p>
                 <EligibilityBreakdown 
                   matchedConditions={matchResult.matchedConditions}
                   failedConditions={matchResult.failedConditions}
@@ -134,35 +142,53 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
             )}
 
             <section>
-              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">Target Beneficiaries</h2>
+              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">{t('secBeneficiaries')}</h2>
               <p className="text-neutral-700 text-sm leading-relaxed">{scheme.targetBeneficiaries}</p>
             </section>
 
             <section>
-              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">Eligibility Criteria</h2>
+              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">{t('secEligibility')}</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-neutral-700">
-                {scheme.eligibility.minAge && <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">• Min Age: <span className="font-semibold">{scheme.eligibility.minAge} years</span></li>}
-                {scheme.eligibility.maxAge && <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">• Max Age: <span className="font-semibold">{scheme.eligibility.maxAge} years</span></li>}
+                {scheme.eligibility.minAge && (
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+                    • {isHindi ? 'न्यूनतम आयु' : 'Min Age'}: <span className="font-semibold">{scheme.eligibility.minAge} {isHindi ? 'वर्ष' : 'years'}</span>
+                  </li>
+                )}
+                {scheme.eligibility.maxAge && (
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+                    • {isHindi ? 'अधिकतम आयु' : 'Max Age'}: <span className="font-semibold">{scheme.eligibility.maxAge} {isHindi ? 'वर्ष' : 'years'}</span>
+                  </li>
+                )}
                 {scheme.eligibility.genders && scheme.eligibility.genders.length > 0 && (
-                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">• Genders: <span className="font-semibold">{scheme.eligibility.genders.join(', ')}</span></li>
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+                    • {isHindi ? 'पात्र लिंग' : 'Genders'}: <span className="font-semibold">{scheme.eligibility.genders.join(', ')}</span>
+                  </li>
                 )}
                 {scheme.eligibility.categories && scheme.eligibility.categories.length > 0 && (
-                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">• Categories: <span className="font-semibold">{scheme.eligibility.categories.join(', ')}</span></li>
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+                    • {isHindi ? 'सामाजिक श्रेणियां' : 'Categories'}: <span className="font-semibold">{scheme.eligibility.categories.join(', ')}</span>
+                  </li>
                 )}
                 {scheme.eligibility.businessTypes && scheme.eligibility.businessTypes.length > 0 && (
-                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100 col-span-1 sm:col-span-2">• Business Sectors: <span className="font-semibold">{scheme.eligibility.businessTypes.join(', ')}</span></li>
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100 col-span-1 sm:col-span-2">
+                    • {isHindi ? 'व्यवसाय क्षेत्र' : 'Business Sectors'}: <span className="font-semibold">{scheme.eligibility.businessTypes.join(', ')}</span>
+                  </li>
                 )}
                 {scheme.eligibility.maxAnnualIncome && (
-                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">• Max Income: <span className="font-semibold">₹{scheme.eligibility.maxAnnualIncome.toLocaleString()}</span></li>
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+                    • {isHindi ? 'अधिकतम आय' : 'Max Income'}: <span className="font-semibold">₹{scheme.eligibility.maxAnnualIncome.toLocaleString()}</span>
+                  </li>
                 )}
                 {scheme.eligibility.maxProjectCost && (
-                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">• Max Project Cost: <span className="font-semibold">₹{scheme.eligibility.maxProjectCost.toLocaleString()}</span></li>
+                  <li className="bg-neutral-50 p-3 rounded-2xl border border-neutral-100">
+                    • {isHindi ? 'अधिकतम परियोजना सीमा' : 'Max Project Cost'}: <span className="font-semibold">₹{scheme.eligibility.maxProjectCost.toLocaleString()}</span>
+                  </li>
                 )}
               </ul>
             </section>
 
             <section>
-              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">Key Benefits</h2>
+              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">{t('secBenefits')}</h2>
               <ul className="space-y-2 text-sm text-neutral-700">
                 {scheme.benefits.map((b, idx) => (
                   <li key={idx} className="flex items-start gap-2.5">
@@ -174,24 +200,32 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <section>
-                <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">Required Documents</h2>
-                <ol className="space-y-2 text-sm text-neutral-700">
+              {/* Enhanced Required Documents with Icon */}
+              <section className="bg-neutral-50/50 p-6 rounded-3xl border border-neutral-200">
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-neutral-200">
+                  <FileText className="w-5 h-5 text-neutral-800" />
+                  <h2 className="text-lg font-bold text-neutral-900">{t('secDocuments')}</h2>
+                </div>
+                <ol className="space-y-2.5 text-sm text-neutral-700">
                   {scheme.documents.map((doc, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <span className="text-xs font-bold text-neutral-400 mt-0.5">{idx + 1}.</span>
-                      <span>{doc}</span>
+                    <li key={idx} className="flex items-start gap-2.5 bg-white p-3 rounded-2xl border border-neutral-200/80 shadow-2xs">
+                      <span className="text-xs font-bold text-neutral-500 mt-0.5 bg-neutral-100 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0">
+                        {idx + 1}
+                      </span>
+                      <span className="font-medium text-neutral-800">{doc}</span>
                     </li>
                   ))}
                 </ol>
               </section>
 
-              <section>
-                <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">How to Apply</h2>
-                <ol className="space-y-2 text-sm text-neutral-700">
+              <section className="bg-neutral-50/50 p-6 rounded-3xl border border-neutral-200">
+                <h2 className="text-lg font-bold text-neutral-900 mb-4 pb-2 border-b border-neutral-200">{t('secHowToApply')}</h2>
+                <ol className="space-y-2.5 text-sm text-neutral-700">
                   {scheme.applicationProcess.map((step, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <span className="text-xs font-bold text-neutral-400 mt-0.5">{idx + 1}.</span>
+                    <li key={idx} className="flex items-start gap-2.5 bg-white p-3 rounded-2xl border border-neutral-200/80 shadow-2xs">
+                      <span className="text-xs font-bold text-neutral-500 mt-0.5 bg-neutral-100 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0">
+                        {idx + 1}
+                      </span>
                       <span>{step}</span>
                     </li>
                   ))}
@@ -200,15 +234,15 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
             </div>
 
             <section>
-              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">State Coverage</h2>
+              <h2 className="text-lg font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">{t('secStateCoverage')}</h2>
               <p className="text-neutral-700 text-sm">{scheme.stateCoverage}</p>
             </section>
           </div>
           
           <div className="bg-neutral-50 p-6 sm:p-10 border-t border-neutral-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
             <div>
-              <span className="block mb-1 font-medium">Source Reference: <span className="text-neutral-800 underline inline-flex items-center gap-1">Fictional Demo Authority <ExternalLink className="w-3 h-3" /></span></span>
-              <span>Last Verified: {new Date(scheme.lastUpdated).toLocaleDateString()}</span>
+              <span className="block mb-1 font-medium">{t('sourceRef')} <span className="text-neutral-800 underline inline-flex items-center gap-1">{scheme.ministry || 'Government of India'} <ExternalLink className="w-3 h-3" /></span></span>
+              <span>{t('lastVerified')} {new Date(scheme.lastUpdated).toLocaleDateString()}</span>
             </div>
             <Disclaimer className="w-full sm:w-auto mt-4 sm:mt-0 max-w-md text-xs py-2.5 px-3.5" />
           </div>
@@ -221,7 +255,7 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
           <div className="p-4 bg-neutral-900 text-white flex justify-between items-center">
             <h3 className="font-semibold text-sm flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-neutral-300" />
-              <span>AI Scheme Assistant</span>
+              <span>{t('navAiAssistant')}</span>
             </h3>
             <button 
               onClick={() => setIsChatOpen(false)}
@@ -245,7 +279,7 @@ export default function SchemeDetailPage({ params }: { params: { id: string } })
           className="fixed bottom-8 right-8 bg-black text-white px-6 py-3.5 rounded-full shadow-2xl hover:bg-neutral-800 transition-all z-40 flex items-center gap-2.5 border border-neutral-700"
         >
           <MessageSquare className="w-5 h-5" />
-          <span className="font-semibold text-sm">Ask AI Assistant</span>
+          <span className="font-semibold text-sm">{t('btnAskAi')}</span>
         </button>
       )}
     </div>
