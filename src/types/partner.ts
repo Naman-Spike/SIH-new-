@@ -39,3 +39,4 @@ export interface PartnerDistanceResult extends ChannelPartner {
   distanceKm: number;
   isEligibleForRouting: boolean;
 }
+

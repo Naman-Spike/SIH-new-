@@ -108,3 +108,4 @@ export default function PartnerLocatorPage() {
     </Suspense>
   );
 }
+

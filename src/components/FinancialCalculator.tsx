@@ -596,3 +596,4 @@ export default function FinancialCalculator({ initialSchemeId }: FinancialCalcul
     </div>
   );
 }
+
