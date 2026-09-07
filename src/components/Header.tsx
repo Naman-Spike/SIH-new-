@@ -23,12 +23,24 @@ export default function Header() {
           </div>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center space-x-5">
+          <nav className="hidden md:flex items-center space-x-3 lg:space-x-4">
             <Link 
               href="/scheme-finder" 
               className="text-neutral-600 hover:text-black font-medium text-sm transition-colors px-3 py-1.5 rounded-full hover:bg-neutral-100"
             >
               {t('navFindSchemes')}
+            </Link>
+            <Link 
+              href="/calculator" 
+              className="text-neutral-600 hover:text-black font-medium text-sm transition-colors px-3 py-1.5 rounded-full hover:bg-neutral-100"
+            >
+              {t('navCalculator')}
+            </Link>
+            <Link 
+              href="/partner-locator" 
+              className="text-neutral-600 hover:text-black font-medium text-sm transition-colors px-3 py-1.5 rounded-full hover:bg-neutral-100"
+            >
+              {t('navPartnerLocator')}
             </Link>
             <Link 
               href="/chat" 
@@ -117,6 +129,20 @@ export default function Header() {
             onClick={() => setIsOpen(false)}
           >
             {t('navFindSchemes')}
+          </Link>
+          <Link
+            href="/calculator"
+            className="block px-4 py-2.5 rounded-2xl text-base font-medium text-neutral-800 hover:text-black hover:bg-neutral-100"
+            onClick={() => setIsOpen(false)}
+          >
+            {t('navCalculator')}
+          </Link>
+          <Link
+            href="/partner-locator"
+            className="block px-4 py-2.5 rounded-2xl text-base font-medium text-neutral-800 hover:text-black hover:bg-neutral-100"
+            onClick={() => setIsOpen(false)}
+          >
+            {t('navPartnerLocator')}
           </Link>
           <Link
             href="/chat"

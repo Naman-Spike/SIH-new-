@@ -11,6 +11,12 @@ export {
   INDIAN_STATES,
 } from "./userProfile";
 export type { MatchResult, EligibilityStatus } from "./matchResult";
+export type {
+  PartnerType,
+  RoutingHealthStatus,
+  ChannelPartner,
+  PartnerDistanceResult,
+} from "./partner";
 export { normalizeStateName, STATE_ALIASES } from "@/utils/stateMapping";
 export { formatCurrency } from "@/utils/formatCurrency";
 

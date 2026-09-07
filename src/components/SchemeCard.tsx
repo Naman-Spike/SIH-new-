@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import type { Scheme, MatchResult, UserProfile } from '@/types';
 import MatchBadge from './MatchBadge';
 import EligibilityBreakdown from './EligibilityBreakdown';
-import { ArrowRight, MessageSquare, FileText } from 'lucide-react';
+import { ArrowRight, MessageSquare, FileText, Calculator, Building2 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface SchemeCardProps {
@@ -89,21 +89,41 @@ export default function SchemeCard({ scheme, matchResult, userProfile }: SchemeC
         />
       </div>
       
-      <div className="flex flex-col sm:flex-row gap-3 pt-5 border-t border-neutral-100">
-        <button 
-          onClick={handleViewDetails}
-          className="flex-1 bg-black hover:bg-neutral-800 text-white font-medium py-3 px-5 rounded-full transition-all flex items-center justify-center gap-2 text-sm shadow-sm"
-        >
-          <span>{t('btnViewDetails')}</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-        <button 
-          onClick={handleAskAi}
-          className="flex-1 bg-white border border-neutral-300 hover:bg-neutral-100 text-neutral-900 font-medium py-3 px-5 rounded-full transition-all flex items-center justify-center gap-2 text-sm"
-        >
-          <MessageSquare className="w-4 h-4" />
-          <span>{t('btnAskAi')}</span>
-        </button>
+      <div className="flex flex-col gap-2.5 pt-5 border-t border-neutral-100">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button 
+            onClick={handleViewDetails}
+            className="flex-1 bg-black hover:bg-neutral-800 text-white font-medium py-3 px-5 rounded-full transition-all flex items-center justify-center gap-2 text-sm shadow-sm"
+          >
+            <span>{t('btnViewDetails')}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={handleAskAi}
+            className="flex-1 bg-white border border-neutral-300 hover:bg-neutral-100 text-neutral-900 font-medium py-3 px-5 rounded-full transition-all flex items-center justify-center gap-2 text-sm"
+          >
+            <MessageSquare className="w-4 h-4" />
+            <span>{t('btnAskAi')}</span>
+          </button>
+        </div>
+
+        {/* Quick Tools Row: Financial Calculator & Partner Locator */}
+        <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+          <button
+            onClick={() => router.push(`/calculator?scheme=${scheme.id}`)}
+            className="flex-1 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 text-neutral-800 font-semibold py-2 px-3 rounded-full text-xs flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <Calculator className="w-3.5 h-3.5 text-neutral-700" />
+            <span>{t('btnCalculateEMI')}</span>
+          </button>
+          <button
+            onClick={() => router.push(`/partner-locator?scheme=${scheme.id}`)}
+            className="flex-1 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 text-neutral-800 font-semibold py-2 px-3 rounded-full text-xs flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <Building2 className="w-3.5 h-3.5 text-neutral-700" />
+            <span>{t('btnFindPartner')}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
