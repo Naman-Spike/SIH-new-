@@ -75,6 +75,42 @@ export function getCityCoordinates(
   };
 }
 
+/**
+ * Geocode a city/state string using Nominatim (via /api/geocode proxy).
+ * Falls back to local KNOWN_CITY_COORDINATES if the API call fails.
+ */
+export async function geocodeCity(
+  query: string
+): Promise<{ lat: number; lon: number; displayName?: string; source: 'nominatim' | 'local' }> {
+  // First try the Nominatim API for accurate global coverage
+  try {
+    const searchQuery = query.includes('India') ? query : `${query}, India`;
+    const res = await fetch(`/api/geocode?q=${encodeURIComponent(searchQuery)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.lat && data.lon) {
+        return {
+          lat: data.lat,
+          lon: data.lon,
+          displayName: data.display_name,
+          source: 'nominatim',
+        };
+      }
+    }
+  } catch {
+    // Fall through to local lookup
+  }
+
+  // Fallback to local city coordinates dictionary
+  const local = getCityCoordinates(query);
+  return {
+    lat: local.lat,
+    lon: local.lon,
+    displayName: `${local.city}, ${local.state}`,
+    source: 'local',
+  };
+}
+
 export interface PartnerFilterOptions {
   userLat: number;
   userLon: number;

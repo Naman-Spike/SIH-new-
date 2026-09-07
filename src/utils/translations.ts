@@ -193,6 +193,9 @@ export const translations = {
     locatorRoutingSuccess: 'Application Routing Pre-Approved!',
     locatorVoucherText: 'Your forwarding voucher has been generated with priority allocation routing.',
     locatorAuditBadge: 'NPA & Fund Health Audit Protected',
+    locatorMapTitle: 'Interactive Geo-Spatial Partner Map',
+    locatorMapSubtitle: 'Powered by OpenStreetMap & Overpass API: Channel partners and public services around your location',
+    locatorSearchCityBtn: 'Search City',
 
     // Footer & Disclaimers
     footerDisclaimer: '⚠️ Demo Version — Scheme information shown in this prototype is mock data for demonstration only and not an official government recommendation.',
@@ -392,6 +395,9 @@ export const translations = {
     locatorRoutingSuccess: 'आवेदन अग्रेषण पूर्व-स्वीकृत!',
     locatorVoucherText: 'प्राथमिकता आवंटन और पार्टनर कोड के साथ आपका अग्रेषण वाउचर तैयार कर दिया गया है।',
     locatorAuditBadge: 'एनपीए व वित्तीय स्वास्थ्य ऑडिट द्वारा सुरक्षित',
+    locatorMapTitle: 'इंटरैक्टिव भू-स्थानिक पार्टनर मानचित्र',
+    locatorMapSubtitle: 'OpenStreetMap एवं Overpass API द्वारा संचालित: आपके स्थान के आस-पास चैनल पार्टनर और सार्वजनिक संसाधन',
+    locatorSearchCityBtn: 'शहर खोजें',
 
     // Footer & Disclaimers
     footerDisclaimer: '⚠️ डेमो संस्करण — इस प्रोटोटाइप में दिखाई गई योजना की जानकारी प्रदर्शन उद्देश्यों के लिए है और यह आधिकारिक सरकारी सिफारिश नहीं है।',
