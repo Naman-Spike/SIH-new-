@@ -137,7 +137,7 @@ export const translations = {
     // AI Chat Page & Assistant
     chatTitle: 'AI Scheme Assistant',
     chatSubtitle: 'Udhyog-Setu Conversational Guidance',
-    chatGreeting: "Hello! I am your Udhyog-Setu AI Assistant. I will guide you with a few quick questions to find government schemes that 100% match your profile.\n\nTo start: What is your **age** and **gender**?",
+    chatGreeting: "Hello! I am your Udhyog-Setu AI Assistant. I will guide you with a few quick questions to find government schemes that 100% match your profile.\n\nTo start: What is your **age**, **gender**, **state**, and **city / district**?",
     chatPlaceholder: 'Type your message (e.g. 28 years female from Lucknow UP)...',
     chatSend: 'Send',
     chatDocsQuestion: 'What documents are required?',
@@ -336,7 +336,7 @@ export const translations = {
     // AI Chat Page & Assistant
     chatTitle: 'एआई योजना सहायक',
     chatSubtitle: 'उद्योग-सेतु संवादात्मक मार्गदर्शन',
-    chatGreeting: 'नमस्ते! मैं आपका उद्योग-सेतु एआई सहायक हूँ। मैं कुछ आसान सवालों के ज़रिए आपके लिए 100% पात्र सरकारी योजनाएं ढूंढने में मदद करूँगा।\n\nशुरू करने के लिए: आपकी **आयु** और **लिंग** क्या है?',
+    chatGreeting: 'नमस्ते! मैं आपका उद्योग-सेतु एआई सहायक हूँ। मैं कुछ आसान सवालों के ज़रिए आपके लिए 100% पात्र सरकारी योजनाएं ढूंढने में मदद करूँगा।\n\nशुरू करने के लिए: आपकी **आयु**, **लिंग**, **राज्य** और **शहर / ज़िला** क्या है?',
     chatPlaceholder: 'अपना संदेश लिखें (उदा. 28 वर्ष महिला, लखनऊ उत्तर प्रदेश)...',
     chatSend: 'भेजें',
     chatDocsQuestion: 'आवश्यक दस्तावेज़ क्या हैं?',

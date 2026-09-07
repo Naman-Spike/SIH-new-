@@ -24,11 +24,11 @@ export default function ChatModePage() {
     if (lang === 'hi') {
       return "नमस्ते! मैं आपका उद्योग-सेतु एआई सहायक हूँ। 🇮🇳\n\n" +
         "मैं कुछ आसान सवालों के ज़रिए आपके लिए **100% उपयुक्त सरकारी योजनाएं** और उनके **आवश्यक दस्तावेज़** ढूंढने में मदद करूँगा।\n\n" +
-        "शुरू करने के लिए: आपकी **आयु** और **लिंग** क्या है?";
+        "शुरू करने के लिए: आपकी **आयु**, **लिंग**, **राज्य** और **शहर / ज़िला** क्या है?";
     }
     return "Hello! I am your Udhyog-Setu AI Assistant. 🇮🇳\n\n" +
       "I will guide you with a few quick questions to find government schemes that **100% match your profile**, along with the **Required Documents** for each.\n\n" +
-      "To start: What is your **age** and **gender**?";
+      "To start: What is your **age**, **gender**, **state**, and **city / district**?";
   };
 
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -159,19 +159,27 @@ export default function ChatModePage() {
 
   const getNextPrompt = (p: Partial<UserProfile>): string | null => {
     if (!p.age || !p.gender) {
+      const missing: string[] = [];
+      if (!p.age) missing.push(isHindi ? '**आयु**' : '**age**');
+      if (!p.gender) missing.push(isHindi ? '**लिंग**' : '**gender**');
       return isHindi
-        ? "कृपया अपनी **आयु** (18 से 100 वर्ष) और **लिंग** (पुरुष, महिला, या अन्य) बताएं।"
-        : "Please tell me your **age** (between 18 and 100) and **gender** (Male, Female, or Other).";
+        ? `कृपया अपनी ${missing.join(' और ')} (और अपना **राज्य व शहर**) बताएं।`
+        : `Please tell me your ${missing.join(' and ')} (along with your **State and City**).`;
     }
-    if (!p.state) {
+    if (!p.state || !p.city) {
+      if (!p.state && !p.city) {
+        return isHindi
+          ? "आप किस **राज्य** (उदा. UP, HR, Maharashtra, Delhi) और **शहर / ज़िला** में स्थित हैं?"
+          : "Which **State** (e.g. UP, HR, Maharashtra, Delhi) and **City / District** are you located in?";
+      }
+      if (!p.city) {
+        return isHindi
+          ? `बढ़िया, ${p.state}! आपका **शहर या ज़िला** (City / District) कौन सा है?`
+          : `Got it, ${p.state}! What is your **City or District**?`;
+      }
       return isHindi
-        ? "आप किस **राज्य** (उदा. UP, HR, Maharashtra, Delhi) और **शहर / ज़िला** में स्थित हैं?"
-        : "Which **State** (e.g. UP, HR, Maharashtra, Delhi) and **City / District** are you located in?";
-    }
-    if (!p.city) {
-      return isHindi
-        ? `बढ़िया, ${p.state}! आपका **शहर या ज़िला** कौन सा है?`
-        : `Got it, ${p.state}! What is your **City or District**?`;
+        ? `बढ़िया, ${p.city}! आपका **राज्य** (State) कौन सा है?`
+        : `Got it, ${p.city}! What is your **State**?`;
     }
     if (!p.category) {
       return isHindi
