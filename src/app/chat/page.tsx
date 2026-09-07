@@ -3,11 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, Sparkles, ArrowRight, Send, User, Bot, CheckCircle2 } from 'lucide-react';
+import { Loader2, Sparkles, ArrowRight, Send, User, Bot, CheckCircle2, FileText, Globe } from 'lucide-react';
 import { STATE_ALIASES, INDIAN_STATES, formatCurrency } from '@/types';
-import type { UserProfile } from '@/types';
+import type { UserProfile, Scheme } from '@/types';
 import Disclaimer from '@/components/Disclaimer';
 import { useLanguage } from '@/context/LanguageContext';
+import localSchemesData from '@/data/schemes.json';
 
 interface ChatMessage {
   id: string;
@@ -17,33 +18,40 @@ interface ChatMessage {
 
 export default function ChatModePage() {
   const router = useRouter();
-  const { isHindi, t } = useLanguage();
+  const { language, setLanguage, isHindi, t } = useLanguage();
+
+  const getWelcomeText = (lang: 'en' | 'hi') => {
+    if (lang === 'hi') {
+      return "नमस्ते! मैं आपका उद्योग-सेतु एआई सहायक हूँ। 🇮🇳\n\n" +
+        "मैं कुछ आसान सवालों के ज़रिए आपके लिए **100% उपयुक्त सरकारी योजनाएं** और उनके **आवश्यक दस्तावेज़** ढूंढने में मदद करूँगा।\n\n" +
+        "शुरू करने के लिए: आपकी **आयु** और **लिंग** क्या है?";
+    }
+    return "Hello! I am your Udhyog-Setu AI Assistant. 🇮🇳\n\n" +
+      "I will guide you with a few quick questions to find government schemes that **100% match your profile**, along with the **Required Documents** for each.\n\n" +
+      "To start: What is your **age** and **gender**?";
+  };
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'msg-0',
       sender: 'assistant',
-      text: isHindi
-        ? "नमस्ते! मैं आपका उद्योग-सेतु एआई सहायक हूँ। मैं कुछ आसान सवालों के ज़रिए आपके लिए 100% उपयुक्त सरकारी योजनाएं ढूंढने में मदद करूँगा।\n\nशुरू करने के लिए: आपकी **आयु** और **लिंग** क्या है?"
-        : "Hello! I am your Udhyog-Setu AI Assistant. I will guide you with a few quick questions to find government schemes that 100% match your profile.\n\nTo start: What is your **age** and **gender**?",
+      text: getWelcomeText(language),
     },
   ]);
 
-  // Update initial message when language changes if only 1 message exists
+  // Synchronize initial message if user switches language at start
   useEffect(() => {
     setMessages((prev) => {
       if (prev.length === 1 && prev[0].id === 'msg-0') {
         return [{
           id: 'msg-0',
           sender: 'assistant',
-          text: isHindi
-            ? "नमस्ते! मैं आपका उद्योग-सेतु एआई सहायक हूँ। मैं कुछ आसान सवालों के ज़रिए आपके लिए 100% उपयुक्त सरकारी योजनाएं ढूंढने में मदद करूँगा।\n\nशुरू करने के लिए: आपकी **आयु** और **लिंग** क्या है?"
-            : "Hello! I am your Udhyog-Setu AI Assistant. I will guide you with a few quick questions to find government schemes that 100% match your profile.\n\nTo start: What is your **age** and **gender**?",
+          text: getWelcomeText(language),
         }];
       }
       return prev;
     });
-  }, [isHindi]);
+  }, [language]);
 
   const [inputText, setInputText] = useState('');
   const [isMatching, setIsMatching] = useState(false);
@@ -61,7 +69,7 @@ export default function ChatModePage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isMatching]);
 
   const parseMessage = (text: string, current: Partial<UserProfile>): Partial<UserProfile> => {
     const updated = { ...current };
@@ -183,7 +191,41 @@ export default function ChatModePage() {
     return null;
   };
 
-  const handleSend = (textToSend?: string) => {
+  // Helper to generate list of required documents for all top schemes
+  const getDocumentsOverviewResponse = (lang: 'en' | 'hi') => {
+    const schemesList = localSchemesData.schemes as unknown as Scheme[];
+    const topSchemes = schemesList.slice(0, 6);
+
+    if (lang === 'hi') {
+      let text = "📋 **प्रमुख सरकारी योजनाओं के लिए आवश्यक दस्तावेज़:**\n\n";
+      topSchemes.forEach((s, idx) => {
+        text += `**${idx + 1}. ${s.name}**\n`;
+        text += `• अधिकतम सहायता: ${s.maximumLoanAmount ? formatCurrency(s.maximumLoanAmount) : 'परियोजना अनुसार'}\n`;
+        text += `• **आवश्यक दस्तावेज़:**\n`;
+        s.documents.forEach((doc) => {
+          text += `  - ${doc}\n`;
+        });
+        text += "\n";
+      });
+      text += "💡 *आप ऊपर अपनी आयु, लिंग, राज्य और व्यवसाय बताकर यह भी जान सकते हैं कि आप इनमें से किस योजना के लिए 100% पात्र हैं!*";
+      return text;
+    }
+
+    let text = "📋 **Required Documents for Major Government Schemes:**\n\n";
+    topSchemes.forEach((s, idx) => {
+      text += `**${idx + 1}. ${s.name}**\n`;
+      text += `• Max Financial Assistance: ${s.maximumLoanAmount ? formatCurrency(s.maximumLoanAmount) : 'Varies'}\n`;
+      text += `• **Required Documents:**\n`;
+      s.documents.forEach((doc) => {
+        text += `  - ${doc}\n`;
+      });
+      text += "\n";
+    });
+    text += "💡 *You can also answer a few quick questions (age, state, sector) to discover which schemes you 100% qualify for!*";
+    return text;
+  };
+
+  const handleSend = async (textToSend?: string) => {
     const raw = (textToSend || inputText).trim();
     if (!raw) return;
 
@@ -193,42 +235,141 @@ export default function ChatModePage() {
       text: raw,
     };
 
+    setInputText('');
+
+    // Check if user specifically asks for language switch
+    const lower = raw.toLowerCase();
+    if (lower === 'hindi' || lower === 'हिन्दी' || lower.includes('in hindi') || lower.includes('हिन्दी में')) {
+      setLanguage('hi');
+      const botMessage: ChatMessage = {
+        id: `bot-${Date.now() + 1}`,
+        sender: 'assistant',
+        text: "भाषा बदलकर **हिन्दी** कर दी गई है! 🇮🇳\n\n" +
+          "आइए आपके लिए 100% उपयुक्त सरकारी योजनाएं और आवश्यक दस्तावेज़ खोजते हैं।\n\n" +
+          "आपकी **आयु** (Age) और **लिंग** (Gender) क्या है?",
+      };
+      setMessages((prev) => [...prev, userMessage, botMessage]);
+      return;
+    }
+
+    if (lower === 'english' || lower.includes('in english')) {
+      setLanguage('en');
+      const botMessage: ChatMessage = {
+        id: `bot-${Date.now() + 1}`,
+        sender: 'assistant',
+        text: "Language set to **English**! 🇬🇧\n\n" +
+          "Let's find government schemes that 100% match your profile along with the required documents.\n\n" +
+          "What is your **age** and **gender**?",
+      };
+      setMessages((prev) => [...prev, userMessage, botMessage]);
+      return;
+    }
+
+    // Check if user asks for required documents overview
+    if (lower.match(/(document|documents|paper|papers|proof|दस्तावेज|दस्तावेज़|कागजात|कागज़ात|प्रमाणपत्र)/i) && 
+        (lower.includes('all') || lower.includes('each') || lower.includes('scheme') || lower.includes('list') || lower.includes('योजना') || lower.includes('आवश्यक'))) {
+      const docsOverview = getDocumentsOverviewResponse(language);
+      const botMessage: ChatMessage = {
+        id: `bot-${Date.now() + 1}`,
+        sender: 'assistant',
+        text: docsOverview,
+      };
+      setMessages((prev) => [...prev, userMessage, botMessage]);
+      return;
+    }
+
     const newProfile = parseMessage(raw, profile);
     setProfile(newProfile);
-    setInputText('');
 
     const nextPrompt = getNextPrompt(newProfile);
 
-    let botResponseText = '';
     if (nextPrompt) {
-      botResponseText = nextPrompt;
-    } else {
-      if (isHindi) {
-        botResponseText = `🎉 **प्रोफाइल पूर्ण हुई!** आपके द्वारा दर्ज विवरण:\n\n` +
-          `• **आयु व लिंग**: ${newProfile.age} वर्ष, ${newProfile.gender}\n` +
-          `• **स्थान**: ${newProfile.city ? `${newProfile.city}, ` : ''}${newProfile.state}\n` +
-          `• **सामाजिक श्रेणी**: ${newProfile.category}\n` +
-          `• **व्यवसाय क्षेत्र**: ${newProfile.businessType}\n` +
-          `• **आवश्यक ऋण राशि**: ${newProfile.projectCost ? formatCurrency(newProfile.projectCost) : '₹5 Lakh'}\n\n` +
-          `अब आप अपने प्रोफाइल से **100% मेल खाती** सरकारी योजनाएं देख सकते हैं!`;
-      } else {
-        botResponseText = `🎉 **Profile Complete!** Here is what we collected:\n\n` +
-          `• **Age & Gender**: ${newProfile.age} yrs, ${newProfile.gender}\n` +
-          `• **Location**: ${newProfile.city ? `${newProfile.city}, ` : ''}${newProfile.state}\n` +
-          `• **Category**: ${newProfile.category}\n` +
-          `• **Sector**: ${newProfile.businessType}\n` +
-          `• **Project Requirement**: ${newProfile.projectCost ? formatCurrency(newProfile.projectCost) : '₹5 Lakh'}\n\n` +
-          `You can now view all schemes that **100% match** your profile!`;
-      }
+      const botMessage: ChatMessage = {
+        id: `bot-${Date.now() + 1}`,
+        sender: 'assistant',
+        text: nextPrompt,
+      };
+      setMessages((prev) => [...prev, userMessage, botMessage]);
+      return;
     }
 
-    const botMessage: ChatMessage = {
-      id: `bot-${Date.now() + 1}`,
-      sender: 'assistant',
-      text: botResponseText,
-    };
+    // All collected! Run matching automatically and present schemes + documents directly in chat
+    setMessages((prev) => [...prev, userMessage]);
+    setIsMatching(true);
 
-    setMessages((prev) => [...prev, userMessage, botMessage]);
+    try {
+      const response = await fetch('/api/match-schemes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProfile),
+      });
+
+      const data = await response.json();
+      sessionStorage.setItem('user-profile', JSON.stringify(newProfile));
+      sessionStorage.setItem('match-results', JSON.stringify(data.matches));
+
+      const eligibleMatches = (data.matches || []).filter((m: any) => m.score === 100 && m.status === 'Eligible');
+      const schemesList = localSchemesData.schemes as unknown as Scheme[];
+      const schemeMap = new Map<string, Scheme>();
+      schemesList.forEach((s) => schemeMap.set(s.id, s));
+
+      let botResponseText = '';
+      if (isHindi) {
+        botResponseText = `🎉 **प्रोफाइल पूर्ण!** आपके विवरण के आधार पर **100% उपयुक्त सरकारी योजनाएं** और उनके **आवश्यक दस्तावेज़**:\n\n`;
+        if (eligibleMatches.length > 0) {
+          eligibleMatches.slice(0, 4).forEach((m: any, idx: number) => {
+            const s = schemeMap.get(m.schemeId);
+            botResponseText += `**${idx + 1}. 🏛️ ${m.schemeName}**\n`;
+            if (s?.maximumLoanAmount) {
+              botResponseText += `• अधिकतम ऋण सहायता: **${formatCurrency(s.maximumLoanAmount)}**\n`;
+            }
+            if (s?.documents && s.documents.length > 0) {
+              botResponseText += `• **📄 आवश्यक दस्तावेज़:**\n`;
+              s.documents.forEach((doc) => {
+                botResponseText += `  ✓ ${doc}\n`;
+              });
+            }
+            botResponseText += "\n";
+          });
+          botResponseText += `👉 **[यहाँ क्लिक करके सभी ${eligibleMatches.length} योजनाओं का पूरा विवरण और तुलना देखें](/results)**`;
+        } else {
+          botResponseText += `आपके द्वारा दर्ज विवरण के अनुसार वर्तमान में कोई 100% मेल खाती योजना नहीं मिली। कृपया अपने व्यवसाय क्षेत्र या ऋण राशि में थोड़ा बदलाव करके देखें।`;
+        }
+      } else {
+        botResponseText = `🎉 **Profile Complete!** Here are your **100% Matching Government Schemes** and the **Required Documents** for each:\n\n`;
+        if (eligibleMatches.length > 0) {
+          eligibleMatches.slice(0, 4).forEach((m: any, idx: number) => {
+            const s = schemeMap.get(m.schemeId);
+            botResponseText += `**${idx + 1}. 🏛️ ${m.schemeName}**\n`;
+            if (s?.maximumLoanAmount) {
+              botResponseText += `• Max Loan Assistance: **${formatCurrency(s.maximumLoanAmount)}**\n`;
+            }
+            if (s?.documents && s.documents.length > 0) {
+              botResponseText += `• **📄 Required Documents:**\n`;
+              s.documents.forEach((doc) => {
+                botResponseText += `  ✓ ${doc}\n`;
+              });
+            }
+            botResponseText += "\n";
+          });
+          botResponseText += `👉 **[Click here to view full scheme details & apply on Results Page](/results)**`;
+        } else {
+          botResponseText += `No schemes 100% matched these specific parameters. Try adjusting your business sector or loan amount.`;
+        }
+      }
+
+      const botMessage: ChatMessage = {
+        id: `bot-${Date.now() + 1}`,
+        sender: 'assistant',
+        text: botResponseText,
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (err) {
+      console.error('Matching failed:', err);
+    } finally {
+      setIsMatching(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -281,7 +422,7 @@ export default function ChatModePage() {
         <div className="w-[1100px] h-[520px] bg-gradient-to-b from-blue-100/60 via-indigo-50/40 to-transparent blur-3xl opacity-80 rounded-full -translate-y-24" />
       </div>
 
-      <div className="flex-1 max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 w-full space-y-8">
+      <div className="flex-1 max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 w-full space-y-6">
         {/* Header */}
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/80 border border-blue-100 text-xs font-semibold text-blue-600">
@@ -293,13 +434,62 @@ export default function ChatModePage() {
           </h1>
           <p className="text-sm text-neutral-500 max-w-lg mx-auto">
             {isHindi 
-              ? 'अपनी आयु, स्थान (राज्य व शहर), सामाजिक श्रेणी और व्यवसाय के बारे में कुछ आसान प्रश्नों के उत्तर दें।'
-              : 'Answer a few quick questions about your age, location (state & city), category, and venture.'}
+              ? 'अपनी आयु, स्थान (राज्य व शहर), सामाजिक श्रेणी और व्यवसाय के बारे में बताएं।'
+              : 'Answer a few quick questions to find government schemes and their required documents.'}
           </p>
         </div>
 
         {/* Chat Window */}
-        <div className="bg-white shadow-xl shadow-neutral-100/60 border border-neutral-200/90 rounded-3xl overflow-hidden flex flex-col h-[520px]">
+        <div className="bg-white shadow-xl shadow-neutral-100/60 border border-neutral-200/90 rounded-3xl overflow-hidden flex flex-col h-[540px]">
+          {/* Prominent Chat Sub-Header with Language Toggle */}
+          <div className="px-5 py-3 bg-neutral-900 text-white flex items-center justify-between border-b border-neutral-800">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold tracking-tight">
+                  {isHindi ? 'उद्योग-सेतु संवादात्मक सहायक' : 'Udhyog-Setu AI Assistant'}
+                </h3>
+                <span className="text-[11px] text-neutral-400">
+                  {isHindi ? '100% योजना मिलान व दस्तावेज़ सूची' : '100% Scheme Matching & Documents'}
+                </span>
+              </div>
+            </div>
+
+            {/* Language Switcher Pill inside Chat Header */}
+            <div className="flex items-center bg-white/10 p-1 rounded-full border border-white/20 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => {
+                  setLanguage('en');
+                  handleSend('English');
+                }}
+                className={`px-3 py-1 rounded-full transition-all ${
+                  language === 'en'
+                    ? 'bg-white text-black font-bold shadow-xs'
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                English
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLanguage('hi');
+                  handleSend('हिन्दी');
+                }}
+                className={`px-3 py-1 rounded-full transition-all ${
+                  language === 'hi'
+                    ? 'bg-white text-black font-bold shadow-xs'
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                हिन्दी
+              </button>
+            </div>
+          </div>
+
           {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-neutral-50/40">
             {messages.map((msg) => {
@@ -312,7 +502,7 @@ export default function ChatModePage() {
                     </div>
                   )}
                   <div
-                    className={`max-w-md px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
+                    className={`max-w-lg px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
                       isBot
                         ? 'bg-white border border-neutral-200 text-neutral-800 shadow-xs'
                         : 'bg-black text-white font-medium'
@@ -328,23 +518,39 @@ export default function ChatModePage() {
                 </div>
               );
             })}
+            {isMatching && (
+              <div className="flex items-start gap-3 justify-start">
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="bg-white border border-neutral-200 text-neutral-600 rounded-2xl px-4 py-3 text-sm flex items-center gap-2 shadow-xs">
+                  <Loader2 className="w-4 h-4 animate-spin text-black" />
+                  <span>
+                    {isHindi ? '100% उपयुक्त योजनाएं और आवश्यक दस्तावेज़ जांचे जा रहे हैं...' : 'Matching 100% schemes & compiling required documents...'}
+                  </span>
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Quick reply shortcuts */}
-          <div className="px-4 py-2 border-t border-neutral-100 bg-white flex flex-wrap gap-1.5 text-xs text-neutral-600">
+          <div className="px-4 py-2 border-t border-neutral-100 bg-white flex flex-wrap items-center gap-1.5 text-xs text-neutral-600">
             <span className="text-neutral-400 self-center mr-1">{t('quickPick')}</span>
-            {(isHindi 
-              ? ['28, महिला', 'लखनऊ, UP', 'ओबीसी श्रेणी', 'खाद्य प्रसंस्करण (Food)', '₹5 लाख ऋण']
-              : ['28, Female', 'Lucknow, UP', 'OBC Category', 'Food Processing', '₹5 Lakh loan']
-            ).map((sug) => (
+            {[
+              { label: '📋 ' + (isHindi ? 'आवश्यक दस्तावेज़ सूची' : 'Required Documents for Schemes'), val: isHindi ? 'आवश्यक दस्तावेज़ क्या हैं?' : 'What documents are required for each scheme?' },
+              { label: isHindi ? '28, महिला, लखनऊ UP' : '28, Female, Lucknow UP', val: isHindi ? '28 वर्ष, महिला, लखनऊ उत्तर प्रदेश' : '28, Female, Lucknow UP' },
+              { label: isHindi ? 'ओबीसी (OBC) श्रेणी' : 'OBC Category', val: 'OBC' },
+              { label: isHindi ? 'खाद्य प्रसंस्करण (Food)' : 'Food Processing', val: 'Food' },
+              { label: isHindi ? '₹5 लाख ऋण' : '₹5 Lakh loan', val: '500000' },
+            ].map((sug, idx) => (
               <button
-                key={sug}
+                key={idx}
                 type="button"
-                onClick={() => handleSend(sug)}
-                className="px-3 py-1 rounded-full border border-neutral-200 hover:border-black bg-neutral-50 hover:bg-neutral-100 transition-all"
+                onClick={() => handleSend(sug.val)}
+                className="px-3 py-1 rounded-full border border-neutral-200 hover:border-black bg-neutral-50 hover:bg-neutral-100 transition-all font-medium"
               >
-                {sug}
+                {sug.label}
               </button>
             ))}
           </div>
@@ -356,7 +562,7 @@ export default function ChatModePage() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={isHindi ? 'अपना उत्तर लिखें (उदा. 28 महिला, लखनऊ UP, 5 लाख)...' : 'Type your answer (e.g. 28 Female, Lucknow UP, 5 Lakh)...'}
+              placeholder={isHindi ? 'अपना उत्तर या प्रश्न लिखें (उदा. 28 महिला लखनऊ, आवश्यक दस्तावेज)...' : 'Type your answer or question (e.g. 28 Female Lucknow, documents required)...'}
               className="flex-1 px-4 py-3 rounded-full border border-neutral-300 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black bg-white"
             />
             <button
@@ -461,7 +667,7 @@ export default function ChatModePage() {
               </>
             ) : (
               <>
-                <span>{isHindi ? '100% पात्र योजनाएं देखें' : 'Find 100% Matching Schemes'}</span>
+                <span>{isHindi ? '100% पात्र योजनाएं व दस्तावेज़ देखें' : 'Find 100% Matching Schemes & Documents'}</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}

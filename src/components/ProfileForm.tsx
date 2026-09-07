@@ -52,7 +52,7 @@ const SECTOR_LABELS: Record<string, { en: string; hi: string }> = {
 
 export default function ProfileForm() {
   const router = useRouter();
-  const { t, isHindi } = useLanguage();
+  const { language, setLanguage, t, isHindi } = useLanguage();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -190,6 +190,37 @@ export default function ProfileForm() {
 
   return (
     <div className="bg-white rounded-3xl border border-neutral-200/90 p-6 sm:p-10 max-w-2xl mx-auto shadow-xl shadow-neutral-100/50">
+      {/* Language Switcher Bar at top of Form Card */}
+      <div className="flex justify-between items-center mb-8 pb-4 border-b border-neutral-100">
+        <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+          {isHindi ? '🌐 भाषा चयन' : '🌐 Select Language'}
+        </span>
+        <div className="inline-flex bg-neutral-100 p-1 rounded-full border border-neutral-200 text-xs font-semibold">
+          <button
+            type="button"
+            onClick={() => setLanguage('en')}
+            className={`px-3.5 py-1 rounded-full transition-all ${
+              language === 'en'
+                ? 'bg-black text-white font-bold shadow-xs'
+                : 'text-neutral-600 hover:text-black'
+            }`}
+          >
+            English
+          </button>
+          <button
+            type="button"
+            onClick={() => setLanguage('hi')}
+            className={`px-3.5 py-1 rounded-full transition-all ${
+              language === 'hi'
+                ? 'bg-black text-white font-bold shadow-xs'
+                : 'text-neutral-600 hover:text-black'
+            }`}
+          >
+            हिन्दी
+          </button>
+        </div>
+      </div>
+
       {/* Step Progress Indicator */}
       <div className="mb-10 max-w-md mx-auto">
         <div className="flex items-center justify-between relative">
